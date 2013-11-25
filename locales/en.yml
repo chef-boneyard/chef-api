@@ -1,0 +1,58 @@
+en:
+  chef_api:
+    errors:
+      abstract_method: >
+        `%{method}` is an abstract method. You must override this method in
+        your subclass with the proper implementation and logic. For more
+        information, please see the inline documentation for %{method}. If you
+        are not a developer, this is most likely a bug in the ChefAPI gem.
+        Please file a bug report at
+        https://github.com/sethvargo/chef-api/issues/new and include the
+        command(s) you ran to arrive at this error.
+      cannot_regenerate_key: >
+        You called `regenerate_key` on a client that does not exist on the
+        remote Chef Server. You can only regenerate a private key for a client
+        that is persisted. Try saving this record this client before
+        regenerating the private key.
+      file_not_found: >
+        I could not find a file at `%{path}`. Please make sure you have typed
+        the path correctly and that the resource at `%{path}` does actually
+        exist.
+      http_method_not_allowed: >
+        The HTTP method `%{verb}' is not allowed on the URL `%{url}'.
+      insufficient_file_permissions: >
+        I cannot read the file at `%{path}` because the permissions on the file
+        do not permit it. Please ensure the file has the correct permissions and
+        that this Ruby process is running as a user with access to `%{path}`.
+      invalid_resource: >
+        There were errors saving your resource: %{errors}
+      invalid_validator: >
+        `%{key}` is not a valid validator. Please make sure it is spelled
+        correctly and that the constant is properly defined. If you are using
+        a custom validator, please ensure the validator extends
+        ChefAPI::Validator::Base and is a subclass of ChefAPI::Validator.
+      missing_url_parameter: >
+        The required URL parameter `%{param}' was not present. Please specify
+        `%{param}' as an option, like Resource.new(id, %{param}: 'value').
+      not_a_directory: >
+        The given path `%{path}' is not a directory. Please make sure you have
+        passed the path to a directory on disk.
+      resource_already_exists: >
+        The %{type} `%{id}` already exists on the Chef Server. Each
+        %{type} must have a unique identifier and the Chef Server indicated
+        this %{type} already exists. If you are trying to update the %{type},
+        consider using the `update` method instead.
+      resource_not_found: >
+        There is no %{type} with an id of `%{id}` on the Chef Server. If you
+        are updating the %{type}, please make sure the %{type} exists and has
+        the correct Chef identifier (primary key).
+      resource_not_mutable: >
+        The %{type} `%{id}` is not mutable. It may be locked by the remote
+        Chef Server, or the Chef Server may not permit modifying the resource.
+      server_unavailable: >
+        The Chef Server at `%{url}` is unavailable or is not currently
+        accepting client connections. Please ensure the server is accessible
+        via ping (or telnet) on your local network. If this error persists,
+        please contact your network administrator.
+      unknown_attribute: >
+        `%{attribute}` is not a valid attribute
