@@ -47,7 +47,7 @@ module ChefAPI
         return nil if id.nil?
 
         path     = resource_path(id, prefix)
-        response = ChefAPI.connection.get(path).body
+        response = ChefAPI.connection.get(path)
         new(name: id)
       # rescue Faraday::Error::ResourceNotFound
       #   nil

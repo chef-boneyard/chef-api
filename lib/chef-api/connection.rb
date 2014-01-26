@@ -132,17 +132,10 @@ module ChefAPI
     #
     def agent
       @agent ||= begin
-        agent = HTTPClient.new(endpoint)
+        agent = HTTPClient.new
 
+        # Set the user agent from the config
         agent.agent_name = user_agent
-
-        # Check if authentication was given
-        # if username && password
-        #   agent.set_auth(endpoint, username, password)
-
-        #   # https://github.com/nahi/httpclient/issues/63#issuecomment-2377919
-        #   agent.www_auth.basic_auth.challenge(endpoint)
-        # end
 
         # Check if proxy settings were given
         if proxy
@@ -182,7 +175,7 @@ module ChefAPI
 
       case response.status.to_i
       when 200..399
-        response
+        parse_response(response)
       when 400
         raise 'BadRequest: TODO - make this a real error'
       when 401
@@ -234,6 +227,26 @@ module ChefAPI
       end
 
       OpenSSL::PKey::RSA.new(contents)
+    end
+
+    #
+    # Parse the response object and manipulate the result based on the given
+    # +Content-Type+ header. For now, this method only parses JSON, but it
+    # could be expanded in the future to accept other content types.
+    #
+    # @param [HTTP::Message] response
+    #   the response object from the request
+    #
+    # @return [String, Hash]
+    #   the parsed response, as an object
+    #
+    def parse_response(response)
+      case response.headers['Content-Type']
+      when 'application/json'
+        JSON.parse(response.body)
+      else
+        response.body
+      end
     end
 
     #

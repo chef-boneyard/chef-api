@@ -165,7 +165,7 @@ module ChefAPI
     # @return [Hash]
     #
     def load_collection
-      case response = ChefAPI.connection.get(endpoint).body
+      case response = ChefAPI.connection.get(endpoint)
       when Array
         Hash[*response.map { |item| [item, klass.resource_path(item)] }.flatten]
       when Hash

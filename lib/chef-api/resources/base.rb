@@ -20,7 +20,7 @@ module ChefAPI
       # @todo doc
       #
       def from_url(url, prefix = {})
-        from_json(ChefAPI.connection.get(url).body, prefix)
+        from_json(ChefAPI.connection.get(url), prefix)
       end
 
       #
@@ -138,7 +138,7 @@ module ChefAPI
       #
       def post(params = {}, prefix = {})
         path = expanded_collection_path(prefix)
-        ChefAPI.connection.post(path, params).body
+        ChefAPI.connection.post(path, params)
       # rescue Faraday::Error::ClientError => e
       #   id = params[schema.primary_key]
       #   raise Error::ResourceAlreadyExists.new(type: type, id: id)
@@ -162,7 +162,7 @@ module ChefAPI
       #
       def put(id, params = {}, prefix = {})
         path = resource_path(id, prefix)
-        ChefAPI.connection.put(path, params).body
+        ChefAPI.connection.put(path, params)
       # rescue Faraday::Error::ResourceNotFound
       #   raise Error::ResourceNotFound.new(type: type, id: id)
       # rescue Faraday::Error::ClientError => e
@@ -239,7 +239,7 @@ module ChefAPI
         return nil if id.nil?
 
         path     = resource_path(id, prefix)
-        response = ChefAPI.connection.get(path).body
+        response = ChefAPI.connection.get(path)
         from_json(response, prefix)
       # rescue Faraday::Error::ResourceNotFound
       #   nil
@@ -373,7 +373,7 @@ module ChefAPI
       #
       def each(prefix = {}, &block)
         collection(prefix).each do |resource, path|
-          response = ChefAPI.connection.get(path).body
+          response = ChefAPI.connection.get(path)
           result = from_json(response, prefix)
 
           block.call(result) if block
@@ -480,7 +480,7 @@ module ChefAPI
       #   a list of resources in the collection
       #
       def collection(prefix = {})
-        ChefAPI.connection.get(expanded_collection_path(prefix)).body
+        ChefAPI.connection.get(expanded_collection_path(prefix))
       end
 
       #
