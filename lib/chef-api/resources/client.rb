@@ -6,7 +6,7 @@ module ChefAPI
       attribute :name,        type: String,  primary: true, required: true
       attribute :admin,       type: Boolean, default: false
       attribute :public_key,  type: String
-      attribute :private_key, type: [String, Boolean]
+      attribute :private_key, type: [String, Boolean], default: false
       attribute :validator,   type: Boolean, default: false
 
       ignore :certificate, :clientname, :orgname
