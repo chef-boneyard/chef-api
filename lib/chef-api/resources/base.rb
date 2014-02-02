@@ -128,20 +128,17 @@ module ChefAPI
       # server, which should be merged with an existing object's attributes to
       # reflect the newest state of the resource.
       #
-      # @param [Hash] params
-      #   the list of params to create the resource with
+      # @param [Hash] body
+      #   the request body to create the resource with (probably JSON)
       # @param [Hash] prefix
       #   the list of prefix options (for nested resources)
       #
       # @return [String]
       #   the JSON response from the server
       #
-      def post(params = {}, prefix = {})
+      def post(body, prefix = {})
         path = expanded_collection_path(prefix)
-        ChefAPI.connection.post(path, params)
-      # rescue Faraday::Error::ClientError => e
-      #   id = params[schema.primary_key]
-      #   raise Error::ResourceAlreadyExists.new(type: type, id: id)
+        ChefAPI.connection.post(path, body)
       end
 
       #
@@ -152,22 +149,17 @@ module ChefAPI
       # @param [String, Resource::Base] id
       #   a resource object or a string representing the unique identifier of
       #   the resource object to update
-      # @param [Hash] params
-      #   the list of params to create the resource with
+      # @param [Hash] body
+      #   the request body to create the resource with (probably JSON)
       # @param [Hash] prefix
       #   the list of prefix options (for nested resources)
       #
       # @return [String]
       #   the JSON response from the server
       #
-      def put(id, params = {}, prefix = {})
+      def put(id, body, prefix = {})
         path = resource_path(id, prefix)
-        ChefAPI.connection.put(path, params)
-      # rescue Faraday::Error::ResourceNotFound
-      #   raise Error::ResourceNotFound.new(type: type, id: id)
-      # rescue Faraday::Error::ClientError => e
-      #   raise unless e.response[:status] == 405
-      #   raise Error::ResourceNotMutable.new(type: type, id: id)
+        ChefAPI.connection.put(path, body)
       end
 
       #
@@ -184,8 +176,8 @@ module ChefAPI
         path = resource_path(id, prefix)
         ChefAPI.connection.delete(path)
         true
-      # rescue Faraday::Error::ResourceNotFound
-      #   true
+      rescue Error::HTTPNotFound
+        true
       end
 
       #
@@ -241,8 +233,8 @@ module ChefAPI
         path     = resource_path(id, prefix)
         response = ChefAPI.connection.get(path)
         from_json(response, prefix)
-      # rescue Faraday::Error::ResourceNotFound
-      #   nil
+      rescue Error::HTTPNotFound
+        nil
       end
 
       #
@@ -680,14 +672,14 @@ module ChefAPI
       validate!
 
       response = if new_resource?
-                   self.class.post(_attributes, _prefix)
+                   self.class.post(to_json, _prefix)
                  else
-                   self.class.put(id, _attributes, _prefix)
+                   self.class.put(id, to_json, _prefix)
                  end
 
       # Update our local copy with any partial information that was returned
-      # from the server, ignoring an "bad" attributes that aren't defined in our
-      # schema.
+      # from the server, ignoring an "bad" attributes that aren't defined in
+      # our schema.
       response.each do |key, value|
         update_attribute(key, value) if attribute?(key)
       end

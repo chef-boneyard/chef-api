@@ -12,7 +12,15 @@ module ChefAPI
     class AbstractMethod < ChefAPIError; end
     class CannotRegenerateKey < ChefAPIError; end
     class FileNotFound < ChefAPIError; end
-    class HTTPMethodNotAllowed < ChefAPIError; end
+
+    class HTTPError < ChefAPIError; end
+    class HTTPBadRequest < HTTPError; end
+    class HTTPForbiddenRequest < HTTPError; end
+    class HTTPNotFound < HTTPError; end
+    class HTTPMethodNotAllowed < HTTPError; end
+    class HTTPServerUnavailable < HTTPError; end
+
+    class HTTPUnauthorizedRequest < ChefAPIError; end
     class InsufficientFilePermissions < ChefAPIError; end
     class InvalidResource < ChefAPIError; end
     class InvalidValidator < ChefAPIError; end
@@ -21,7 +29,6 @@ module ChefAPI
     class ResourceAlreadyExists < ChefAPIError; end
     class ResourceNotFound < ChefAPIError; end
     class ResourceNotMutable < ChefAPIError; end
-    class ServerUnavailable < ChefAPIError; end
     class UnknownAttribute < ChefAPIError; end
   end
 end

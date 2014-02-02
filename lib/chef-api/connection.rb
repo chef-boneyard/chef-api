@@ -1,5 +1,4 @@
-require 'httpclient'
-require 'mixlib/authentication/signedheaderauth'
+require 'net/http'
 require 'uri'
 
 module ChefAPI
@@ -70,9 +69,16 @@ module ChefAPI
     #
     # @param [String] path
     #   the path to get, relative to {Defaults.endpoint}
+    # @param [Hash] params
+    #   the list of key-value parameters
     #
-    def get(path, *args, &block)
-      request(:get, path, *args, &block)
+    def get(path, params = {})
+      uri = urify(path)
+      uri.query = URI.encode_www_form(params) unless params.empty?
+
+      request = Net::HTTP::Get.new(uri)
+
+      perform(request)
     end
 
     #
@@ -80,9 +86,16 @@ module ChefAPI
     #
     # @param [String] path
     #   the path to post, relative to {Defaults.endpoint}
+    # @param [String] body
+    #   the body of the request
     #
-    def post(path, *args, &block)
-      request(:post, path, *args, &block)
+    def post(path, body)
+      uri = urify(path)
+
+      request = Net::HTTP::Post.new(uri)
+      request.body = body
+
+      perform(request)
     end
 
     #
@@ -90,9 +103,16 @@ module ChefAPI
     #
     # @param [String] path
     #   the path to put, relative to {Defaults.endpoint}
+    # @param [String] body
+    #   the body of the request
     #
-    def put(path, *args, &block)
-      request(:put, path, *args, &block)
+    def put(path, body)
+      uri = urify(path)
+
+      request = Net::HTTP::Put.new(uri)
+      request.body = body
+
+      perform(request)
     end
 
     #
@@ -100,9 +120,16 @@ module ChefAPI
     #
     # @param [String] path
     #   the path to patch, relative to {Defaults.endpoint}
+    # @param [String] body
+    #   the body of the request
     #
-    def patch(path, *args, &block)
-      request(:patch, path, *args, &block)
+    def patch(path, body)
+      uri = urify(path)
+
+      request = Net::HTTP::Patch.new(uri)
+      request.body = body
+
+      perform(request)
     end
 
     #
@@ -111,8 +138,11 @@ module ChefAPI
     # @param [String] path
     #   the path to delete, relative to {Defaults.endpoint}
     #
-    def delete(path, *args, &block)
-      request(:delete, path, *args, &block)
+    def delete(path)
+      uri = urify(path)
+
+      request = Net::HTTP::Delete.new(uri)
+      perform(request)
     end
 
     #
@@ -121,81 +151,86 @@ module ChefAPI
     # @param [String] path
     #   the path to head, relative to {Defaults.endpoint}
     #
-    def head(path, *args, &block)
-      request(:head, path, *args, &block)
+    def head(path)
+      uri = urify(path)
+
+      request = Net::HTTP::Head.new(uri)
+      perform(request)
     end
 
     #
-    # The actually HTTPClient agent.
+    # Perform the HTTP request, handling responses.
     #
-    # @return [HTTPClient]
+    # @param [Net::HTTP::Request] request
+    #   the HTTP request object to make the request with
     #
-    def agent
-      @agent ||= begin
-        agent = HTTPClient.new
-
-        # Set the user agent from the config
-        agent.agent_name = user_agent
-
-        # Check if proxy settings were given
-        if proxy
-          agent.proxy = proxy
-        end
-
-        agent
-      end
-    end
-
+    # @return [String]
     #
-    # Make an HTTP reequest with the given verb and path.
-    #
-    # @param [String, Symbol] verb
-    #   the HTTP verb to use
-    # @param [String] path
-    #   the absolute or relative URL to use, expanded relative to {Defaults.endpoint}
-    #
-    # @return [ChefAPI::RequestWrapper]
-    #
-    def request(verb, path, *args, &block)
-      url = URI.parse(path)
+    def perform(request)
+      add_request_headers(request)
+      url = request.uri.to_s
 
-      # Don't merge absolute URLs
-      unless url.absolute?
-        url = URI.parse(File.join(endpoint, path)).to_s
-      end
+      response = http.request(request)
 
-      # Convert the URL back into a string
-      url = url.to_s
+      puts
+      puts response.body
+      puts
 
-      # Add the signing header with Mixlib Auth
-      args.push(header: default_headers.merge(signed_header_auth(verb, url)))
-
-      # Make the actual request
-      response = agent.send(verb, url, *args, &block)
-
-      case response.status.to_i
+      case response.code.to_i
       when 200..399
         parse_response(response)
       when 400
-        raise 'BadRequest: TODO - make this a real error'
+        raise Error::HTTPBadRequest.new(url: url)
       when 401
-        raise 'Unauthorized: TODO - make this a real error'
+        raise Error::HTTPUnauthorizedRequest.new(url: url)
       when 403
-        raise 'Forbidden: TODO - make this a real error'
+        raise Error::HTTPForbiddenRequest.new(url: url)
       when 404
-        raise 'NotFound: TODO - make this a real error'
+        raise Error::HTTPNotFound.new(url: url)
       when 405
-        raise Error::HTTPMethodNotAllowed(verb: verb, url: url)
+        raise Error::HTTPMethodNotAllowed.new(verb: verb, url: url)
       when 500..600
-        raise Error::ServerUnavailable.new(url: url)
+        raise Error::HTTPServerUnavailable.new(url: url)
       else
-        raise Error::ServerUnavailable.new(url: url)
+        raise Error::HTTPServerUnavailable.new(url: url)
       end
     rescue SocketError, Errno::ECONNREFUSED, EOFError
-      raise Error::ServerUnavailable.new(url: url)
+      raise Error::HTTPServerUnavailable.new(url: url)
     end
 
     private
+
+    #
+    # The HTTP request object.
+    #
+    # @return [Net::HTTP]
+    #
+    def http
+      return @http if @http
+
+      uri = URI.parse(endpoint)
+      @http = Net::HTTP.new(uri.host, uri.port)
+      @http.use_ssl = true if uri.scheme == 'https'
+      @http
+    end
+
+    #
+    # Helper method to merge the given URL attribute with the endpoint.
+    #
+    # @param [String, URI] path
+    #   the path to make the URI from
+    #
+    # @return [URI]
+    #
+    def urify(path)
+      uri = URI.parse(path)
+
+      if uri.absolute?
+        uri
+      else
+        URI.parse(File.join(endpoint, path))
+      end
+    end
 
     #
     # Parse the given private key. Users can specify the private key as:
@@ -241,7 +276,7 @@ module ChefAPI
     #   the parsed response, as an object
     #
     def parse_response(response)
-      case response.headers['Content-Type']
+      case response['Content-Type']
       when 'application/json'
         JSON.parse(response.body)
       else
@@ -250,32 +285,46 @@ module ChefAPI
     end
 
     #
+    # Adds the default headers to the request object.
     #
+    # @param [Net::HTTP::Request] request
     #
-    def signed_header_auth(verb, url)
-      url = URI.parse(url)
+    def add_request_headers(request)
+      headers = {
+        'Accept'         => 'application/json',
+        'Content-Type'   => 'application/json',
+        'User-Agent'     => user_agent,
+        'X-Chef-Version' => '11.4.0',
+      }.merge(signed_header_auth(request))
+
+      headers.each do |key, value|
+        request.add_field(key, value)
+      end
+    end
+
+    #
+    # Use mixlib-auth to create a signed header auth.
+    #
+    # @param [Net::HTTP::Request] request
+    #
+    def signed_header_auth(request)
+      unless defined?(Mixlib::Authentication)
+        require 'mixlib/authentication/signedheaderauth'
+      end
+
+      verb = request.class.name.split('::').last.downcase
+      url  = URI.parse(endpoint)
       private_key = parse_key(key)
 
       Mixlib::Authentication::SignedHeaderAuth.signing_object(
         :http_method => verb,
-        :body        => '',
+        :body        => request.body || '',
         :host        => "#{url.host}:#{url.port}",
-        :path        => url.path,
+        :path        => request.path,
         :timestamp   => Time.now.utc.iso8601,
         :user_id     => client,
         :file        => '',
       ).sign(private_key)
-    end
-
-    #
-    #
-    #
-    def default_headers
-      {
-        'Accept'         => 'application/json',
-        'Content-Type'   => 'application/json',
-        'X-Chef-Version' => '11.4.0',
-      }
     end
   end
 end

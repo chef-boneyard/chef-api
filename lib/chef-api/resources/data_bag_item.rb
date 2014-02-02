@@ -13,7 +13,7 @@ module ChefAPI
         data = JSON.parse(contents)
         data[:id] = id
 
-        bag = bag.is_a?(DataBag) ? bag : DataBag.new(name: bag)
+        bag = bag.is_a?(Resource::DataBag) ? bag : Resource::DataBag.new(name: bag)
 
         new(data, { bag: bag.name }, bag)
       end
@@ -26,7 +26,7 @@ module ChefAPI
     # hash.
     #
     def initialize(attributes = {}, prefix = {}, bag = nil)
-      @bag = bag || DataBag.fetch(prefix[:bag])
+      @bag = bag || Resource::DataBag.fetch(prefix[:bag])
 
       id = attributes.delete(:id) || attributes.delete('id')
       super({ id: id, data: attributes }, prefix)

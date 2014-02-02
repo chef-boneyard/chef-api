@@ -49,8 +49,8 @@ module ChefAPI
         path     = resource_path(id, prefix)
         response = ChefAPI.connection.get(path)
         new(name: id)
-      # rescue Faraday::Error::ResourceNotFound
-      #   nil
+      rescue Error::HTTPNotFound
+        nil
       end
 
       #
@@ -72,7 +72,7 @@ module ChefAPI
     # @see Base.has_many
     #
     def items
-      associations[:items] ||= DataBagItemCollectionProxy.new(self)
+      associations[:items] ||= Resource::DataBagItemCollectionProxy.new(self)
     end
   end
 end
@@ -87,7 +87,7 @@ module ChefAPI
   class Resource::DataBagItemCollectionProxy < Resource::CollectionProxy
     def initialize(bag)
       # Delegate to the superclass
-      super(bag, DataBagItem, nil, bag: bag.name)
+      super(bag, Resource::DataBagItem, nil, bag: bag.name)
     end
 
     # @see klass.new
