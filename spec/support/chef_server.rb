@@ -32,7 +32,6 @@ module RSpec
       })
 
       ChefAPI.endpoint = @server.url
-      ChefAPI.connection   = 'chefapi'
       ChefAPI.key      = ChefZero::PRIVATE_KEY
     end
 

@@ -34,7 +34,7 @@ module ChefAPI
       # @return [String]
       #
       def endpoint
-        ENV['CHEFAPI_ENDPOINT'] || ENDPOINT
+        ENV['CHEF_API_ENDPOINT'] || ENDPOINT
       end
 
       #
@@ -43,7 +43,7 @@ module ChefAPI
       # @return [String]
       #
       def user_agent
-        ENV['CHEFAPI_USER_AGENT'] || USER_AGENT
+        ENV['CHEF_API_USER_AGENT'] || USER_AGENT
       end
 
       #
@@ -54,7 +54,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def client
-        ENV['CHEFAPI_CLIENT']
+        ENV['CHEF_API_CLIENT']
       end
 
       #
@@ -65,17 +65,66 @@ module ChefAPI
       # @return [String, nil]
       #
       def key
-        ENV['CHEFAPI_KEY']
+        ENV['CHEF_API_KEY']
       end
-
       #
-      # The HTTP Proxy information as a string
+      # The HTTP Proxy server address as a string
       #
       # @return [String, nil]
       #
-      def proxy
-        ENV['CHEFAPI_PROXY']
+      def proxy_address
+        ENV['CHEF_API_PROXY_ADDRESS']
       end
+
+      #
+      # The HTTP Proxy user password as a string
+      #
+      # @return [String, nil]
+      #
+      def proxy_password
+        ENV['CHEF_API_PROXY_PASSWORD']
+      end
+
+      #
+      # The HTTP Proxy server port as a string
+      #
+      # @return [String, nil]
+      #
+      def proxy_port
+        ENV['CHEF_API_PROXY_PORT']
+      end
+
+      #
+      # The HTTP Proxy server username as a string
+      #
+      # @return [String, nil]
+      #
+      def proxy_username
+        ENV['CHEF_API_PROXY_USERNAME']
+      end
+
+      #
+      # The path to a pem file on disk for use with a custom SSL verification
+      #
+      # @return [String, nil]
+      #
+      def ssl_pem_file
+        ENV['CHEF_API_SSL_PEM_FILE']
+      end
+
+      #
+      # Verify SSL requests (default: true)
+      #
+      # @return [true, false]
+      #
+      def ssl_verify
+        if ENV['CHEF_API_SSL_VERIFY'].nil?
+          true
+        else
+          %w[t y].include?(ENV['CHEF_API_SSL_VERIFY'].downcase[0])
+        end
+      end
+
     end
   end
 end

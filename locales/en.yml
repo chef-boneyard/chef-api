@@ -19,25 +19,43 @@ en:
         the path correctly and that the resource at `%{path}` does actually
         exist.
       http_bad_request: >
-        The Chef Server at `%{url}' did not understand the request because it
-        was malformed.
+        The Chef Server did not understand the request because it was malformed.
+        The Chef Server returned this message:
+
+            %{message}
       http_forbidden_request: >
-        The Chef Server url at `%{url}' actively refused to fulfill the
-        request.
+        The Chef Server actively refused to fulfill the request. The Chef Server
+        returned this message:
+
+            %{message}
       http_method_not_allowed: >
-        The HTTP method `%{verb}' is not allowed on the URL `%{url}'.
+        That HTTP method is not allowed on this URL. The Chef Server returned
+        this message:
+
+            %{message}
+      http_not_acceptable: >
+        The Chef Server identified this request as unacceptable. This usually
+        means you have not specified the correct Accept or Content-Type headers
+        on the request object. The Chef Server returned this message:
+
+            %{message}
       http_not_found: >
-        The url `%{url}' does not exist on the remote Chef Server.
+        The requested URL does not exist on the Chef Server. The Chef Server
+        returned this message:
+
+            %{message}
       http_server_unavailable: >
-        The Chef Server at `%{url}` is unavailable or is not currently
-        accepting client connections. Please ensure the server is accessible
-        via ping (or telnet) on your local network. If this error persists,
-        please contact your network administrator.
+        The Chef Server is currently unavailable or is not currently accepting
+        client connections. Please ensure the server is accessible via ping
+        or telnet on your local network. If this error persists, please contact
+        your network administrator.
       http_unauthorized_request: >
-        The Chef Server at `%{url}' requires authorization. Please ensure you
-        have specified the correct client name and private key. If this error
-        continues, please verify the given client has the proper permissions
-        on the Chef Server.
+        The Chef Server requires authorization. Please ensure you have specified
+        the correct client name and private key. If this error continues, please
+        verify the given client has the proper permissions on the Chef Server.
+        The Chef Server returned this message:
+
+            %{message}
       insufficient_file_permissions: >
         I cannot read the file at `%{path}` because the permissions on the file
         do not permit it. Please ensure the file has the correct permissions and
