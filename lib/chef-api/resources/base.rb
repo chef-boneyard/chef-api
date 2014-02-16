@@ -180,6 +180,25 @@ module ChefAPI
       end
 
       #
+      # Get the "list" of items in this resource. This list contains the
+      # primary keys of all of the resources in this collection. This method
+      # is useful in CLI applications, because it only makes a single API
+      # request to gather this data.
+      #
+      # @param [Hash] prefix
+      #   the listof prefix options (for nested resources)
+      #
+      # @example Get the list of all clients
+      #   Client.list #=> ['validator', 'chef-webui']
+      #
+      # @return [Array<String>]
+      #
+      def list(prefix = {})
+        path = expanded_collection_path(prefix)
+        ChefAPI.connection.get(path).keys.sort
+      end
+
+      #
       # Destroy a record with the given id.
       #
       # @param [String, Fixnum] id
