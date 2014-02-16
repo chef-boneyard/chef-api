@@ -169,8 +169,7 @@ module ChefAPI
       #   the id of the resource to delete
       # @param [Hash] prefix
       #   the list of prefix options (for nested resources)
-      # @return [Boolean]
-      #   true (always)
+      # @return [true]
       #
       def delete(id, prefix = {})
         path = resource_path(id, prefix)
