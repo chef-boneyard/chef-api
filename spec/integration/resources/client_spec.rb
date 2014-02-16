@@ -52,7 +52,9 @@ module ChefAPI
 
       it 'raises an exception when the resource already exists' do
         chef_server.create_client('bacon')
-        expect { described_class.create(name: 'bacon') }.to raise_error(Error::ResourceAlreadyExists)
+        expect {
+          described_class.create(name: 'bacon')
+        }.to raise_error(Error::ResourceAlreadyExists)
       end
     end
 
