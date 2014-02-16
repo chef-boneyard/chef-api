@@ -36,7 +36,7 @@ module ChefAPI
     def full_messages
       self.map do |key, errors|
         errors.map do |error|
-          "`#{key}` #{error}"
+          "`#{key}' #{error}"
         end
       end.flatten
     end
