@@ -5,6 +5,9 @@ RSpec.configure do |config|
   require 'support/chef_server'
   config.include(RSpec::ChefServer::DSL)
 
+  # Shared Examples
+  Dir[ChefAPI.root.join('spec/support/shared/**/*.rb')].each { |file| require file }
+
   # Basic configuraiton
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
