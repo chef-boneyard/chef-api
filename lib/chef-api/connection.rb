@@ -223,7 +223,7 @@ module ChefAPI
       end
     rescue SocketError, Errno::ECONNREFUSED, EOFError
       log.warn "     Unable to reach the Chef Server"
-      raise Error::HTTPServerUnavailable.new(url: url)
+      raise Error::HTTPServerUnavailable.new
     end
 
     #
