@@ -29,7 +29,7 @@ module ChefAPI
       # @return [Symbol]
       #
       def level
-        @level ||= :info
+        @level ||= :warn
       end
 
       #
