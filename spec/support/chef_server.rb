@@ -10,11 +10,7 @@ module RSpec
 
     class << self
       def method_missing(m, *args, &block)
-        if instance.respond_to?(m)
-          instance.send(m, *args, &block)
-        else
-          super
-        end
+        instance.send(m, *args, &block)
       end
     end
 
