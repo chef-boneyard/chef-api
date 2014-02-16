@@ -201,6 +201,11 @@ module ChefAPI
         # Naughty, naughty, naughty! Don't blame when when someone hops in
         # and executes a MITM attack!
         unless ssl_verify
+          log.warn "===> Disabling SSL verification..."
+          log.warn "Neither ChefAPI nor the maintainers are responsible for " \
+            "damanges incurred as a result of disabling SSL verification. " \
+            "Please use this with extreme caution, or consider specifying " \
+            "a custom certificate using `config.ssl_pem_file'."
           connection.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
       end
