@@ -22,9 +22,4 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'i18n',                  '~> 0.6'
   spec.add_dependency 'mixlib-authentication', '~> 1.3'
-
-  spec.add_development_dependency 'chef-zero', '~> 2.0'
-  spec.add_development_dependency 'pry',       '~> 0.9'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec',     '~> 2.14'
 end
