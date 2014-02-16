@@ -257,24 +257,14 @@ module ChefAPI
       end
 
       #
-      # Build a new resource, raising any validation errors that occur
-      #
-      # @see Base.build
-      #
-      def build!(attributes = {}, prefix = {})
-        resource = build(attributes, prefix)
-        resource.validate!
-        resource
-      end
-
-      #
       # Create a new resource and save it to the Chef Server, raising any
-      # exceptions that might occur.
+      # exceptions that might occur. This method will save the resource back to
+      # the Chef Server, raising any validation errors that occur.
       #
-      # @warn validations are executed, but this method performs a "soft" save.
-      #   It will not raise an exception if the save fails due to validation
-      #   errors! If you want to manually run schema validations, you should
-      #   use create!
+      # @raise [Error::ResourceAlreadyExists]
+      #   if the resource with the primary key already exists on the Chef Server
+      # @raise [Error::InvalidResource]
+      #   if any of the resource's validations fail
       #
       # @param [Hash] attributes
       #   the list of attributes to set on the new resource
@@ -286,21 +276,11 @@ module ChefAPI
         resource = build(attributes, prefix)
 
         unless resource.new_resource?
-          resource.errors.add(resource.primary_key, 'already exists')
+          raise Error::ResourceAlreadyExists.new
         end
 
-        resource.save
+        resource.save!
         resource
-      end
-
-      #
-      # Create a new resource, raising any exceptions or validation errors that
-      # occur.
-      #
-      # @see Base.create
-      #
-      def create!(attributes = {}, prefix = {})
-        create(attributes, prefix).save!
       end
 
       #
