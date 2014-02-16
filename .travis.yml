@@ -6,4 +6,9 @@ rvm:
 # Don't install local development gems on Travis
 bundler_args: --without development
 
+# Only test master
+branches:
+  only:
+    - master
+
 script: bundle exec rspec --color --format progress
