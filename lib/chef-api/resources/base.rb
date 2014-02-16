@@ -337,7 +337,7 @@ module ChefAPI
         resource = fetch(id, prefix)
 
         unless resource
-          raise Error::ResourceNotFound(type: type, id: id)
+          raise Error::ResourceNotFound.new(type: type, id: id)
         end
 
         resource.update(attributes).save
