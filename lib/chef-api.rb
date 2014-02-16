@@ -7,7 +7,7 @@ module ChefAPI
   autoload :Configurable,    'chef-api/configurable'
   autoload :Connection,      'chef-api/connection'
   autoload :Defaults,        'chef-api/defaults'
-  autoload :Error,           'chef-api/error'
+  autoload :Error,           'chef-api/errors'
   autoload :ErrorCollection, 'chef-api/error_collection'
   autoload :Logger,          'chef-api/logger'
   autoload :Resource,        'chef-api/resource'
