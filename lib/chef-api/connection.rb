@@ -1,4 +1,6 @@
 require 'net/http'
+require 'net/https'
+require 'openssl'
 require 'uri'
 
 module ChefAPI
@@ -185,8 +187,6 @@ module ChefAPI
 
       # Apply SSL, if applicable
       if uri.scheme == 'https'
-        require 'net/https' unless defined?(Net::HTTPS)
-
         # Turn on SSL
         connection.use_ssl = true
 
