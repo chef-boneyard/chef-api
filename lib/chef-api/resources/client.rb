@@ -26,7 +26,7 @@ module ChefAPI
       # @return [Resource::Client]
       #
       def from_file(path)
-        name, contents = Util.safe_read(path)
+        name, key = Util.safe_read(path)
 
         if client = fetch(name)
           client.private_key = key
