@@ -223,6 +223,13 @@ You can also force ChefAPI to raise an exception if the validations fail, using 
 client.save! #=> InvalidResource: There were errors saving your resource: `name' must be present
 ```
 
+### Objects on Disk
+ChefAPI also has the ability to read and manipulate objects on disk. This varies from resource-to-resource, but the `.from_file` method accepts a path to a resource on disk and loads as much information about the object on disk as it can. The attributes are then merged with the remote resource, if one exists. For example, you can read a Client resource from disk:
+
+```ruby
+client = Client.from_file('~/.chef/bacon.pem') #=> #<Resource::Client name: "bacon", admin: false, public_key: nil, private_key: "..." ...>
+```
+
 
 FAQ
 ---
