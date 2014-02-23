@@ -3,8 +3,8 @@ rvm:
   - 2.0.0
   - 2.1.0
 
-# Don't install local development gems on Travis
-bundler_args: --without development
+# Don't install local development gems on Travis, use parallel gem downloads
+bundler_args: --without development --jobs 7
 
 # Only test master
 branches:
