@@ -20,7 +20,7 @@ module ChefAPI
       # @todo doc
       #
       def from_url(url, prefix = {})
-        from_json(ChefAPI.connection.get(url), prefix)
+        from_json(connection.get(url), prefix)
       end
 
       #
@@ -138,7 +138,7 @@ module ChefAPI
       #
       def post(body, prefix = {})
         path = expanded_collection_path(prefix)
-        ChefAPI.connection.post(path, body)
+        connection.post(path, body)
       end
 
       #
@@ -159,7 +159,7 @@ module ChefAPI
       #
       def put(id, body, prefix = {})
         path = resource_path(id, prefix)
-        ChefAPI.connection.put(path, body)
+        connection.put(path, body)
       end
 
       #
@@ -173,7 +173,7 @@ module ChefAPI
       #
       def delete(id, prefix = {})
         path = resource_path(id, prefix)
-        ChefAPI.connection.delete(path)
+        connection.delete(path)
         true
       rescue Error::HTTPNotFound
         true
@@ -195,7 +195,7 @@ module ChefAPI
       #
       def list(prefix = {})
         path = expanded_collection_path(prefix)
-        ChefAPI.connection.get(path).keys.sort
+        connection.get(path).keys.sort
       end
 
       #
@@ -249,7 +249,7 @@ module ChefAPI
         return nil if id.nil?
 
         path     = resource_path(id, prefix)
-        response = ChefAPI.connection.get(path)
+        response = connection.get(path)
         from_json(response, prefix)
       rescue Error::HTTPNotFound
         nil
@@ -363,7 +363,7 @@ module ChefAPI
       #
       def each(prefix = {}, &block)
         collection(prefix).each do |resource, path|
-          response = ChefAPI.connection.get(path)
+          response = connection.get(path)
           result = from_json(response, prefix)
 
           block.call(result) if block
@@ -470,7 +470,7 @@ module ChefAPI
       #   a list of resources in the collection
       #
       def collection(prefix = {})
-        ChefAPI.connection.get(expanded_collection_path(prefix))
+        connection.get(expanded_collection_path(prefix))
       end
 
       #
@@ -515,6 +515,15 @@ module ChefAPI
 
           URI.escape(value)
         end.sub(/^\//, '') # Remove leading slash
+      end
+
+      #
+      # The current connection object.
+      #
+      # @return [ChefAPI::Connection]
+      #
+      def connection
+        Thread.current['chefapi.connection'] || ChefAPI.connection
       end
     end
 
