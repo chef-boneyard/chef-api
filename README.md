@@ -90,6 +90,33 @@ export CHEF_API_CLIENT=bacon
 export CHEF_API_KEY=~/.chef/bacon.pem
 ```
 
+If you prefer a more object-oriented approach (or if you want to support multiple simultaneous connections), you can create a raw `ChefAPI::Connection` object. All of the options that are available on the `ChefAPI` object are also available on a raw connection:
+
+```ruby
+connection = ChefAPI::Connection.new(
+  endpoint: 'https://api.opscode.com/organizations/meats',
+  client:   'bacon',
+  key:      '~/.chef/bacon.pem'
+)
+
+connection.clients.fetch('chef-webui')
+connection.environments.delete('production')
+```
+
+If you do not want to manage a `ChefAPI::Connection` object, or if you just prefer an alternative syntax, you can use the block-form:
+
+```ruby
+ChefAPI::Connection.new do |connection|
+  connection.endpoint = 'https://api.opscode.com/organizations/meats'
+  connection.client   = 'bacon'
+  connection.key      = '~/.chef/bacon.pem'
+
+  # The connection object is now setup, so you can use it directly:
+  connection.clients.fetch('chef-webui')
+  connection.environments.delete('production')
+end
+```
+
 ### Making Requests
 The ChefAPI gem attempts to wrap the Chef Server API in an object-oriented and Rubyesque way. All of the methods and API calls are heavily documented inline using YARD. For a full list of every possible option, please see the inline documentation.
 

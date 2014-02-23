@@ -16,21 +16,19 @@ module ChefAPI
       #
       # @macro proxy
       #   @method $1
-      #     Get a proxied collection for +$1+. The proxy automatically injects
-      #     the current connection into the $2, providing a very Rubyesque way
-      #     for handling multiple connection objects.
+      #     Get the list of $1 for this {Connection}. This method is threadsafe.
       #
-      #     @example Get the $1 from the connection object
+      #     @example Get the $1 from this {Connection} object
       #       connection = ChefAPI::Connection.new('...')
-      #       connection.$1 #=> $2 (with the connection object pre-populated)
+      #       connection.$1 #=> $2(attribute1, attribute2, ...)
       #
-      #     @return [ChefAPI::Proxy<$2>]
-      #       a collection proxy for the $2
+      #     @return [Class<$2>]
       #
       def proxy(name, klass)
         class_eval <<-EOH, __FILE__, __LINE__ + 1
           def #{name}
-            @#{name} ||= ChefAPI::Proxy.new(self, #{klass})
+            Thread.current['chefapi.connection'] = self
+            #{klass}
           end
         EOH
       end
@@ -39,9 +37,32 @@ module ChefAPI
     include ChefAPI::Configurable
     include ChefAPI::Logger
 
+    proxy :clients,      'Resource::Client'
+    proxy :cookbooks,    'Resource::Cookbook'
+    proxy :data_bags,    'Resource::DataBag'
+    proxy :environments, 'Resource::Environment'
+    proxy :nodes,        'Resource::Node'
+    proxy :principals,   'Resource::Principal'
+    proxy :roles,        'Resource::Role'
+    proxy :users,        'Resource::User'
+
     #
     # Create a new ChefAPI Connection with the given options. Any options
     # given take precedence over the default options.
+    #
+    # @example Create a connection object from a list of options
+    #   ChefAPI::Connection.new(
+    #     endpoint: 'https://...',
+    #     client:   'bacon',
+    #     key:      '~/.chef/bacon.pem',
+    #   )
+    #
+    # @example Create a connection object using a block
+    #   ChefAPI::Connection.new do |connection|
+    #     connection.endpoint = 'https://...'
+    #     connection.client   = 'bacon'
+    #     connection.key      = '~/.chef/bacon.pem'
+    #   end
     #
     # @return [ChefAPI::Connection]
     #
@@ -56,6 +77,8 @@ module ChefAPI
 
         instance_variable_set(:"@#{key}", value)
       end
+
+      yield self if block_given?
     end
 
     #
@@ -443,7 +466,7 @@ module ChefAPI
     def add_signing_headers(verb, uri, request, key)
       log.info "===> Adding signed header authentication..."
 
-      unless defined?(Mixlib::Authentication)
+      unless defined?(Mixlib::Authentication::SignedHeaderAuth)
         require 'mixlib/authentication/signedheaderauth'
       end
 

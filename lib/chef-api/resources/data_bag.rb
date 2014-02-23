@@ -47,7 +47,7 @@ module ChefAPI
         return nil if id.nil?
 
         path     = resource_path(id, prefix)
-        response = ChefAPI.connection.get(path)
+        response = connection.get(path)
         new(name: id)
       rescue Error::HTTPNotFound
         nil
