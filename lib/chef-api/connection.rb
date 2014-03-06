@@ -474,7 +474,7 @@ module ChefAPI
         :http_method => verb,
         :body        => request.body || '',
         :host        => "#{uri.host}:#{uri.port}",
-        :path        => request.path,
+        :path        => uri.path,
         :timestamp   => Time.now.utc.iso8601,
         :user_id     => client,
         :file        => '',
