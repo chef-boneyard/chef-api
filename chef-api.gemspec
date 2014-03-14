@@ -21,5 +21,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'i18n',                  '~> 0.6'
+  spec.add_dependency 'logify',                '~> 0.1'
   spec.add_dependency 'mixlib-authentication', '~> 1.3'
 end
