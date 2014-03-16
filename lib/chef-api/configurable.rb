@@ -1,7 +1,7 @@
 module ChefAPI
   #
-  # A re-usable class containing configuration information for the {Client}. See
-  # {Defaults} for a list of default values.
+  # A re-usable class containing configuration information for the {Connection}.
+  # See {Defaults} for a list of default values.
   #
   module Configurable
     class << self

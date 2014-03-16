@@ -172,8 +172,6 @@ module ChefAPI
     #   request against
     # @param [#read, Hash, nil] data
     #   the data to use (varies based on the +verb+)
-    # @param [Hash] headers
-    #   the list of headers to use
     #
     # @return [String, Hash]
     #   the response body
@@ -297,7 +295,7 @@ module ChefAPI
     end
 
     #
-    # Helper method to get the corresponding {Net::HTTP} class from the given
+    # Helper method to get the corresponding +Net::HTTP+ class from the given
     # HTTP verb.
     #
     # @param [#to_s] verb

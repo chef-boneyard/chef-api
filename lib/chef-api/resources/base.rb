@@ -383,9 +383,8 @@ module ChefAPI
       #
       # Return an array of all resources in the collection.
       #
-      # @warn
-      #   Unless you need the _entire_ collection, please consider using the
-      #   {size} and {each} methods instead as they are much more perforant.
+      # @note Unless you need the _entire_ collection, please consider using the
+      #  {size} and {each} methods instead as they are much more perforant.
       #
       # @return [Array<Resource::Base>]
       #
@@ -645,8 +644,7 @@ module ChefAPI
     # so they will be reloaded the next time they are requested. If the remote
     # record does not exist, no attributes are modified.
     #
-    # @warn
-    #   This will remove any custom values you have set on the resource!
+    # @note This will remove any custom values you have set on the resource!
     #
     # @return [self]
     #   the instance of the reloaded record
@@ -854,8 +852,7 @@ module ChefAPI
     #   bacon.description = "My new description"
     #   bacon.diff #=> { :description => { :local => "My new description", :remote => "Old description" } }
     #
-    # @warn
-    #   This is a VERY expensive operation - use it sparringly!
+    # @note This is a VERY expensive operation - use it sparringly!
     #
     # @return [Hash]
     #

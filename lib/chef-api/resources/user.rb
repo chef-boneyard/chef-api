@@ -12,6 +12,8 @@ module ChefAPI
       #
       # Authenticate a user with the given +username+ and +password+.
       #
+      # @note Requires Enterprise Chef
+      #
       # @example Authenticate a user
       #   User.authenticate(username: 'user', password: 'pass')
       #     #=> { "status" => "linked", "user" => { ... } }
