@@ -1,4 +1,5 @@
 require 'json'
+require 'logify'
 require 'pathname'
 require 'chef-api/version'
 
@@ -9,7 +10,6 @@ module ChefAPI
   autoload :Defaults,        'chef-api/defaults'
   autoload :Error,           'chef-api/errors'
   autoload :ErrorCollection, 'chef-api/error_collection'
-  autoload :Logger,          'chef-api/logger'
   autoload :Resource,        'chef-api/resource'
   autoload :Schema,          'chef-api/schema'
   autoload :Util,            'chef-api/util'
@@ -22,6 +22,28 @@ module ChefAPI
 
   class << self
     include ChefAPI::Configurable
+
+    #
+    # Set the log level.
+    #
+    # @example Set the log level to :info
+    #   ChefAPI.log_level = :info
+    #
+    # @param [Symbol] level
+    #   the log level to set
+    #
+    def log_level=(level)
+      Logify.level = level
+    end
+
+    #
+    # Get the current log level.
+    #
+    # @return [Symbol]
+    #
+    def log_level
+      Logify.level
+    end
 
     #
     # The source root of the ChefAPI gem. This is useful when requiring files

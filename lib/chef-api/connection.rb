@@ -34,8 +34,8 @@ module ChefAPI
       end
     end
 
+    include Logify
     include ChefAPI::Configurable
-    include ChefAPI::Logger
 
     proxy :clients,      'Resource::Client'
     proxy :cookbooks,    'Resource::Cookbook'
@@ -179,7 +179,7 @@ module ChefAPI
     #   the response body
     #
     def request(verb, path, data = {})
-      log.info "===> #{verb.to_s.upcase} #{path}..."
+      log.info "#{verb.to_s.upcase} #{path}..."
 
       # Build the URI and request object from the given information
       uri = build_uri(verb, path, data)
@@ -224,7 +224,7 @@ module ChefAPI
         # Naughty, naughty, naughty! Don't blame when when someone hops in
         # and executes a MITM attack!
         unless ssl_verify
-          log.warn "===> Disabling SSL verification..."
+          log.warn "Disabling SSL verification..."
           log.warn "Neither ChefAPI nor the maintainers are responsible for " \
             "damanges incurred as a result of disabling SSL verification. " \
             "Please use this with extreme caution, or consider specifying " \
@@ -241,7 +241,7 @@ module ChefAPI
         case response
         when Net::HTTPRedirection
           redirect = URI.parse(response['location'])
-          log.debug "===> Performing HTTP redirect to #{redirect}"
+          log.debug "Performing HTTP redirect to #{redirect}"
           request(verb, redirect, params)
         when Net::HTTPSuccess
           success(response)
@@ -250,7 +250,7 @@ module ChefAPI
         end
       end
     rescue SocketError, Errno::ECONNREFUSED, EOFError
-      log.warn "     Unable to reach the Chef Server"
+      log.warn "Unable to reach the Chef Server"
       raise Error::HTTPServerUnavailable.new
     end
 
@@ -273,12 +273,12 @@ module ChefAPI
     # @return [URI]
     #
     def build_uri(verb, path, params = {})
-      log.info  "===> Building URI..."
+      log.info  "Building URI..."
 
       # Add any query string parameters
       if [:delete, :get].include?(verb)
-        log.debug "     Detected verb deserves a querystring"
-        log.debug "     Building querystring using #{params.inspect}"
+        log.debug "Detected verb deserves a querystring"
+        log.debug "Building querystring using #{params.inspect}"
         path = [path, to_query_string(params)].compact.join('?')
       end
 
@@ -287,8 +287,8 @@ module ChefAPI
 
       # Don't merge absolute URLs
       unless uri.absolute?
-        log.debug "     Detected URI is relative"
-        log.debug "     Appending #{endpoint} to #{path}"
+        log.debug "Detected URI is relative"
+        log.debug "Appending #{endpoint} to #{path}"
         uri = URI.parse(File.join(endpoint, path))
       end
 
@@ -346,24 +346,24 @@ module ChefAPI
     def parsed_key
       return @parsed_key if @parsed_key
 
-      log.info "===> Parsing private key..."
+      log.info "Parsing private key..."
 
       if key.nil?
-        log.warn "     No private key given!"
+        log.warn "No private key given!"
         raise 'No private key given!'
       end
 
       if key.is_a?(OpenSSL::PKey::RSA)
-        log.debug "     Detected private key is an OpenSSL Ruby object"
+        log.debug "Detected private key is an OpenSSL Ruby object"
         @parsed_key = key
       end
 
       if key =~ /(.+)\.pem$/ || File.exists?(key)
-        log.debug "     Detected private key is the path to a file"
+        log.debug "Detected private key is the path to a file"
         contents = File.read(File.expand_path(key))
         @parsed_key = OpenSSL::PKey::RSA.new(contents)
       else
-        log.debug "     Detected private key was the literal string key"
+        log.debug "Detected private key was the literal string key"
         @parsed_key = OpenSSL::PKey::RSA.new(key)
       end
 
@@ -382,15 +382,15 @@ module ChefAPI
     #   the parsed response, as an object
     #
     def success(response)
-      log.info "===> Parsing response as success..."
+      log.info "Parsing response as success..."
 
       case response['Content-Type']
       when 'application/json'
-        log.debug "     Detected response as JSON"
-        log.debug "     Parsing response body as JSON"
+        log.debug "Detected response as JSON"
+        log.debug "Parsing response body as JSON"
         JSON.parse(response.body)
       else
-        log.debug "     Detected response as text/plain"
+        log.debug "Detected response as text/plain"
         response.body
       end
     end
@@ -403,15 +403,15 @@ module ChefAPI
     #   the response object from the request
     #
     def error(response)
-      log.info "===> Parsing response as error..."
+      log.info "Parsing response as error..."
 
       case response['Content-Type']
       when 'application/json'
-        log.debug "     Detected error response as JSON"
-        log.debug "     Parsing error response as JSON"
+        log.debug "Detected error response as JSON"
+        log.debug "Parsing error response as JSON"
         message = JSON.parse(response.body)['error'].first
       else
-        log.debug "     Detected response as text/plain"
+        log.debug "Detected response as text/plain"
         message = response.body
       end
 
@@ -441,7 +441,7 @@ module ChefAPI
     # @param [Net::HTTP::Request] request
     #
     def add_request_headers(request)
-      log.info "===> Adding request headers..."
+      log.info "Adding request headers..."
 
       headers = {
         'Accept'         => 'application/json',
@@ -453,7 +453,7 @@ module ChefAPI
       }
 
       headers.each do |key, value|
-        log.debug "     #{key}: #{value}"
+        log.debug "#{key}: #{value}"
         request[key] = value
       end
     end
@@ -464,7 +464,7 @@ module ChefAPI
     # @param [Net::HTTP::Request] request
     #
     def add_signing_headers(verb, uri, request, key)
-      log.info "===> Adding signed header authentication..."
+      log.info "Adding signed header authentication..."
 
       unless defined?(Mixlib::Authentication::SignedHeaderAuth)
         require 'mixlib/authentication/signedheaderauth'
@@ -481,7 +481,7 @@ module ChefAPI
       ).sign(key)
 
       headers.each do |key, value|
-        log.debug "     #{key}: #{value}"
+        log.debug "#{key}: #{value}"
         request[key] = value
       end
     end
