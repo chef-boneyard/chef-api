@@ -388,7 +388,7 @@ module ChefAPI
       when 'application/json'
         log.debug "Detected response as JSON"
         log.debug "Parsing response body as JSON"
-        JSON.parse(response.body)
+        JSON.parse(response.body, create_additions: false)
       else
         log.debug "Detected response as text/plain"
         response.body
