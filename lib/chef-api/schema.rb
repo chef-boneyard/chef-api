@@ -126,6 +126,13 @@ module ChefAPI
 
     private
 
+    #
+    # @private
+    #
+    # Helper method to duplicate and unfreeze all the attributes in the schema,
+    # yield control to the user for modification in the current context, and
+    # then re-freeze the variables for modification.
+    #
     def unlock
       @attributes = @attributes.dup
       @ignored_attributes = @ignored_attributes.dup
