@@ -28,6 +28,12 @@ en:
         returned this message:
 
             %{message}
+
+      http_gateway_timeout: >
+        The Chef Server did not respond in an adequate amount of time. The
+        gateway timed out. The Chef Server returned this message:
+
+            %{message}
       http_method_not_allowed: >
         That HTTP method is not allowed on this URL. The Chef Server returned
         this message:

@@ -426,6 +426,8 @@ module ChefAPI
         raise Error::HTTPMethodNotAllowed.new(message: message)
       when 406
         raise Error::HTTPNotAcceptable.new(message: message)
+      when 504
+        raise Error::HTTPGatewayTimeout.new(message: message)
       when 500..600
         raise Error::HTTPServerUnavailable.new
       else
