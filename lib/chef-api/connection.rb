@@ -242,7 +242,7 @@ module ChefAPI
 
         case response
         when Net::HTTPRedirection
-          redirect = URI.parse(response['location'])
+          redirect = URI.parse(response['location']).to_s
           log.debug "Performing HTTP redirect to #{redirect}"
           request(verb, redirect, data)
         when Net::HTTPSuccess
