@@ -292,7 +292,7 @@ module ChefAPI
       # Don't merge absolute URLs
       unless uri.absolute?
         log.debug "Detected URI is relative"
-        log.debug "Appending #{endpoint} to #{path}"
+        log.debug "Appending #{path} to #{endpoint}"
         uri = URI.parse(File.join(endpoint, path))
       end
 
