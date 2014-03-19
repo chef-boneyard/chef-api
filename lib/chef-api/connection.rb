@@ -236,6 +236,9 @@ module ChefAPI
       connection.start do |http|
         response = http.request(request)
 
+        log.debug "Raw response:"
+        log.debug response.body
+
         case response
         when Net::HTTPRedirection
           redirect = URI.parse(response['location'])
