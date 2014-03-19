@@ -389,7 +389,7 @@ module ChefAPI
       log.info "Parsing response as success..."
 
       case response['Content-Type']
-      when 'application/json'
+      when /json/
         log.debug "Detected response as JSON"
         log.debug "Parsing response body as JSON"
         JSON.parse(response.body)
@@ -410,7 +410,7 @@ module ChefAPI
       log.info "Parsing response as error..."
 
       case response['Content-Type']
-      when 'application/json'
+      when /json/
         log.debug "Detected error response as JSON"
         log.debug "Parsing error response as JSON"
         message = JSON.parse(response.body)['error'].first
