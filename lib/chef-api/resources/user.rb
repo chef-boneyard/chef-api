@@ -6,6 +6,16 @@ module ChefAPI
       attribute :username,   type: String,  primary: true, required: true
       attribute :admin,      type: Boolean, default: false
       attribute :public_key, type: String
+
+      # "Vanity" attributes
+      attribute :first_name,      type: String
+      attribute :middle_name,     type: String
+      attribute :last_name,       type: String
+      attribute :display_name,    type: String
+      attribute :email,           type: String
+      attribute :city,            type: String
+      attribute :country,         type: String
+      attribute :twitter_account, type: String
     end
 
     class << self
