@@ -3,19 +3,27 @@ module ChefAPI
     collection_path '/users'
 
     schema do
-      attribute :username,   type: String,  primary: true, required: true
-      attribute :admin,      type: Boolean, default: false
-      attribute :public_key, type: String
+      flavor :enterprise do
+        attribute :username, type: String, primary: true, required: true
 
-      # "Vanity" attributes
-      attribute :first_name,      type: String
-      attribute :middle_name,     type: String
-      attribute :last_name,       type: String
-      attribute :display_name,    type: String
-      attribute :email,           type: String
-      attribute :city,            type: String
-      attribute :country,         type: String
-      attribute :twitter_account, type: String
+        # "Vanity" attributes
+        attribute :first_name,      type: String
+        attribute :middle_name,     type: String
+        attribute :last_name,       type: String
+        attribute :display_name,    type: String
+        attribute :email,           type: String
+        attribute :city,            type: String
+        attribute :country,         type: String
+        attribute :twitter_account, type: String
+      end
+
+      flavor :open_source do
+        attribute :name, type: String, primary: true, required: true
+      end
+
+      attribute :admin,       type: Boolean, default: false
+      attribute :public_key,  type: String
+      attribute :private_key, type: [String, Boolean], default: false
     end
 
     has_many :organizations
@@ -25,12 +33,24 @@ module ChefAPI
       # @see Base.each
       #
       def each(prefix = {}, &block)
-        collection(prefix).each do |info|
-          name = URI.escape(info['user']['username'])
-          response = connection.get("/users/#{name}")
-          result = from_json(response, prefix)
+        users = collection(prefix)
 
-          block.call(result) if block
+        # HEC/EC returns a slightly different response than OSC/CZ
+        if users.is_a?(Array)
+          users.each do |info|
+            name = URI.escape(info['user']['username'])
+            response = connection.get("/users/#{name}")
+            result = from_json(response, prefix)
+
+            block.call(result) if block
+          end
+        else
+          users.each do |_, path|
+            response = connection.get(path)
+            result = from_json(response, prefix)
+
+            block.call(result) if block
+          end
         end
       end
 
