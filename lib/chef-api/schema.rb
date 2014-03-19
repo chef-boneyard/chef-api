@@ -44,18 +44,41 @@ module ChefAPI
     end
 
     #
+    # Create a lazy-loaded block for a given flavor.
     #
+    # @example Create a block for Enterprise Chef
+    #   flavor :enterprise do
+    #     attribute :custom_value
+    #   end
+    #
+    # @param [Symbol] id
+    #   the id of the flavor to target
+    # @param [Proc] block
+    #   the block to capture
+    #
+    # @return [Proc]
+    #   the given block
     #
     def flavor(id, &block)
       @flavor_attributes[id] = block
+      block
     end
 
     #
+    # Load the flavor block for the given id.
     #
+    # @param [Symbol] id
+    #   the id of the flavor to target
+    #
+    # @return [true, false]
+    #   true if the flavor existed and was evaluted, false otherwise
     #
     def load_flavor(id)
       if block = @flavor_attributes[id]
         unlock { instance_eval(&block) }
+        true
+      else
+        false
       end
     end
 
