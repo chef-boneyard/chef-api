@@ -10,6 +10,19 @@ module ChefAPI
 
     class << self
       #
+      # @see Base.each
+      #
+      def each(prefix = {}, &block)
+        collection(prefix).each do |info|
+          name = URI.escape(info['user']['username'])
+          response = connection.get("/users/#{name}")
+          result = from_json(response, prefix)
+
+          block.call(result) if block
+        end
+      end
+
+      #
       # Authenticate a user with the given +username+ and +password+.
       #
       # @note Requires Enterprise Chef
