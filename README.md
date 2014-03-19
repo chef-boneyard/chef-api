@@ -48,6 +48,14 @@ ChefAPI.configure do |config|
   # Hosted Chef Server, or Enterprise Chef Server.
   config.endpoint = 'https://api.opscode.com/organizations/meats'
 
+  # ChefAPI will try to determine if you are running on an Enterprise Chef
+  # Server or Open Source Chef depending on the URL you provide for the
+  # +endpoint+ attribute. However, it may be incorrect. If is seems like the
+  # generated schema does not match the response from the server, it is
+  # possible this value was calculated incorrectly. Thus, you should set it
+  # manually. Possible values are +:enterprise+ and +:open_source+.
+  config.flavor = :enterprise
+
   # The client and key must also be specified (unless you are running Chef Zero
   # in no-authentication mode). The +key+ attribute may be the raw private key,
   # the path to the private key on disk, or an +OpenSSLL::PKey+ object.

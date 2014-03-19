@@ -157,6 +157,11 @@ module ChefAPI
     #
     #     ["item_1", "item_2"]
     #
+    # Or if the Chef Server is feeling especially magical, it might return the
+    # actual objects, but prefixed with the JSON id:
+    #
+    #     [{"organization" => {"_id" => "..."}}, {"organization" => {...}}]
+    #
     # So, this method attempts to intelligent handle these use cases. That being
     # said, I can almost guarantee that someone is going to do some crazy
     # strange edge case with this library and hit a bug here, so it will likely
@@ -167,7 +172,19 @@ module ChefAPI
     def load_collection
       case response = Resource::Base.connection.get(endpoint)
       when Array
-        Hash[*response.map { |item| [item, klass.resource_path(item)] }.flatten]
+        if response.first.is_a?(Hash)
+          key = klass.schema.primary_key.to_s
+
+          {}.tap do |hash|
+            response.each do |results|
+              results.each do |_, info|
+                hash[key] = klass.resource_path(info[key])
+              end
+            end
+          end
+        else
+          Hash[*response.map { |item| [item, klass.resource_path(item)] }.flatten]
+        end
       when Hash
         response
       end

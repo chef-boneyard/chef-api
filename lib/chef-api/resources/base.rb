@@ -78,13 +78,13 @@ module ChefAPI
       #   has_many :environments, class_name: 'Environment'
       #
       def has_many(method, options = {})
-        class_name    = options[:class_name] || Util.camelize(method).sub(/s$/, '')
+        class_name    = options[:class_name] || "Resource::#{Util.camelize(method).sub(/s$/, '')}"
         rest_endpoint = options[:rest_endpoint] || method
 
         class_eval <<-EOH, __FILE__, __LINE__ + 1
           def #{method}
             associations[:#{method}] ||=
-              CollectionProxy.new(self, #{class_name}, '#{rest_endpoint}')
+              Resource::CollectionProxy.new(self, #{class_name}, '#{rest_endpoint}')
           end
         EOH
       end
@@ -383,9 +383,8 @@ module ChefAPI
       #
       # Return an array of all resources in the collection.
       #
-      # @warn
-      #   Unless you need the _entire_ collection, please consider using the
-      #   {size} and {each} methods instead as they are much more perforant.
+      # @note Unless you need the _entire_ collection, please consider using the
+      # {size} and {each} methods instead as they are much more perforant.
       #
       # @return [Array<Resource::Base>]
       #
@@ -555,6 +554,9 @@ module ChefAPI
     #   the list of prefix options (for nested resources)
     #
     def initialize(attributes = {}, prefix = {})
+      @schema = self.class.schema.dup
+      @schema.load_flavor(self.class.connection.flavor)
+
       @associations = {}
       @_prefix      = prefix
 
@@ -580,7 +582,7 @@ module ChefAPI
     #   the primary key for this resource
     #
     def primary_key
-      self.class.schema.primary_key
+      @schema.primary_key
     end
 
     #
@@ -605,7 +607,7 @@ module ChefAPI
     # @return [Hash<Symbol, Object>]
     #
     def _attributes
-      @_attributes ||= {}.merge(self.class.schema.attributes)
+      @_attributes ||= {}.merge(@schema.attributes)
     end
 
     #
@@ -645,8 +647,7 @@ module ChefAPI
     # so they will be reloaded the next time they are requested. If the remote
     # record does not exist, no attributes are modified.
     #
-    # @warn
-    #   This will remove any custom values you have set on the resource!
+    # @note This will remove any custom values you have set on the resource!
     #
     # @return [self]
     #   the instance of the reloaded record
@@ -757,7 +758,7 @@ module ChefAPI
     #   the list of validators for this resource
     #
     def validators
-      @validators ||= self.class.schema.validators
+      @validators ||= @schema.validators
     end
 
     #
@@ -854,8 +855,7 @@ module ChefAPI
     #   bacon.description = "My new description"
     #   bacon.diff #=> { :description => { :local => "My new description", :remote => "Old description" } }
     #
-    # @warn
-    #   This is a VERY expensive operation - use it sparringly!
+    # @note This is a VERY expensive operation - use it sparringly!
     #
     # @return [Hash]
     #
@@ -896,7 +896,7 @@ module ChefAPI
     # @return [Boolean]
     #
     def ignore_attribute?(key)
-      self.class.schema.ignored_attributes.has_key?(key.to_sym)
+      @schema.ignored_attributes.has_key?(key.to_sym)
     end
 
     #

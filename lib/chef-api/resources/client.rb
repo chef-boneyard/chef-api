@@ -63,15 +63,13 @@ module ChefAPI
     #   key = client.regenerate_key
     #   key #=> "-----BEGIN PRIVATE KEY-----\nMIGfMA0GCS..."
     #
-    # @warn
-    #   For security reasons, you should perform this operation sparingly! The
-    #   resulting private key is committed to this object, meaning it is saved
-    #   to memory somewhere. You should set this resource's +private_key+ to
-    #   +nil+ after you have committed it to disk and perform a manual GC to
+    # @note For security reasons, you should perform this operation sparingly!
+    #   The resulting private key is committed to this object, meaning it is
+    #   saved to memory somewhere. You should set this resource's +private_key+
+    #   to +nil+ after you have committed it to disk and perform a manual GC to
     #   be ultra-secure.
     #
-    # @warn
-    #   Regenerating the private key also regenerates the public key!
+    # @note Regenerating the private key also regenerates the public key!
     #
     # @return [self]
     #   the current resource with the new public and private key attributes

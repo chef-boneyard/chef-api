@@ -3,7 +3,7 @@ require 'chef-api/version'
 module ChefAPI
   module Defaults
     # Default API endpoint
-    ENDPOINT = 'http://localhost:4000/'.freeze
+    ENDPOINT = 'https://api.opscode.com/'.freeze
 
     # Default User Agent header string
     USER_AGENT = "ChefAPI Ruby Gem #{ChefAPI::VERSION}".freeze
@@ -21,20 +21,40 @@ module ChefAPI
       #
       # The endpoint where the Chef Server lives. This is equivalent to the
       # +chef_server_url+ in Chef terminology. If you are using Enterprise
-      # Hosted Chef or Enterprise Chef on premise, this endpoint includes your
-      # organization name, such as:
+      # Hosted Chef or Enterprise Chef on premise, this endpoint should include
+      # your organization name. For example:
       #
-      #     https://api.opscode.com/organizations/NAME
+      #     https://api.opscode.com/organizations/bacon
       #
-      # If you are running Open Source Chef Server or Chef Zero, this is just
-      # the URL to your Chef Server instance, such as:
+      # If you are running Open Source Chef Server or Chef Zero, this is the
+      # full URL to your Chef Server instance, including the server port and
+      # FQDN.
       #
-      #     http://chef.example.com/
+      #     https://chef.server.local:4567/
       #
-      # @return [String]
+      # @return [String] (default: +https://api.opscode.com/+)
       #
       def endpoint
         ENV['CHEF_API_ENDPOINT'] || ENDPOINT
+      end
+
+      #
+      # The flavor of the target Chef Server. There are two possible values:
+      #
+      #   - enterprise
+      #   - open_source
+      #
+      # "Enterprise" covers both Hosted Chef and Enterprise Chef. "Open Source"
+      # covers both Chef Zero and Open Source Chef Server.
+      #
+      # @return [true, false]
+      #
+      def flavor
+        if ENV['CHEF_API_FLAVOR']
+          ENV['CHEF_API_FLAVOR'].to_sym
+        else
+          endpoint.include?('/organizations') ? :enterprise : :open_source
+        end
       end
 
       #

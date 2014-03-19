@@ -70,6 +70,7 @@ module RSpec
       ['environments', 'environment'],
       ['nodes', 'node'],
       ['roles', 'role'],
+      ['users', 'user'],
     ].each do |plural, singular|
       define_method(plural) do
         @server.data_store.list([plural])

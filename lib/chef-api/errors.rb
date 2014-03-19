@@ -16,6 +16,7 @@ module ChefAPI
     class HTTPError < ChefAPIError; end
     class HTTPBadRequest < HTTPError; end
     class HTTPForbiddenRequest < HTTPError; end
+    class HTTPGatewayTimeout < HTTPError; end
     class HTTPNotAcceptable < HTTPError; end
     class HTTPNotFound < HTTPError; end
     class HTTPMethodNotAllowed < HTTPError; end

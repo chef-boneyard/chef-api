@@ -3,6 +3,9 @@ require 'logify'
 require 'pathname'
 require 'chef-api/version'
 
+# Do not inflate JSON objects
+JSON.create_id = nil
+
 module ChefAPI
   autoload :Boolean,         'chef-api/boolean'
   autoload :Configurable,    'chef-api/configurable'

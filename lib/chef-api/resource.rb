@@ -9,6 +9,7 @@ module ChefAPI
     autoload :DataBagItem,     'chef-api/resources/data_bag_item'
     autoload :Environment,     'chef-api/resources/environment'
     autoload :Node,            'chef-api/resources/node'
+    autoload :Organization,    'chef-api/resources/organization'
     autoload :Principal,       'chef-api/resources/principal'
     autoload :Role,            'chef-api/resources/role'
     autoload :User,            'chef-api/resources/user'

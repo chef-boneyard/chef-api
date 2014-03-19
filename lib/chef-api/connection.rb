@@ -172,14 +172,13 @@ module ChefAPI
     #   request against
     # @param [#read, Hash, nil] data
     #   the data to use (varies based on the +verb+)
-    # @param [Hash] headers
-    #   the list of headers to use
     #
     # @return [String, Hash]
     #   the response body
     #
     def request(verb, path, data = {})
-      log.info "#{verb.to_s.upcase} #{path}..."
+      log.info  "#{verb.to_s.upcase} #{path}..."
+      log.debug "Chef flavor: #{flavor.inspect}"
 
       # Build the URI and request object from the given information
       uri = build_uri(verb, path, data)
@@ -238,11 +237,14 @@ module ChefAPI
       connection.start do |http|
         response = http.request(request)
 
+        log.debug "Raw response:"
+        log.debug response.body
+
         case response
         when Net::HTTPRedirection
-          redirect = URI.parse(response['location'])
+          redirect = URI.parse(response['location']).to_s
           log.debug "Performing HTTP redirect to #{redirect}"
-          request(verb, redirect, params)
+          request(verb, redirect, data)
         when Net::HTTPSuccess
           success(response)
         else
@@ -277,9 +279,12 @@ module ChefAPI
 
       # Add any query string parameters
       if [:delete, :get].include?(verb)
-        log.debug "Detected verb deserves a querystring"
-        log.debug "Building querystring using #{params.inspect}"
-        path = [path, to_query_string(params)].compact.join('?')
+        if querystring = to_query_string(params)
+          log.debug "Detected verb deserves a querystring"
+          log.debug "Building querystring using #{params.inspect}"
+          log.debug "Compiled querystring is #{querystring.inspect}"
+          path = [path, querystring].compact.join('?')
+        end
       end
 
       # Parse the URI
@@ -288,7 +293,7 @@ module ChefAPI
       # Don't merge absolute URLs
       unless uri.absolute?
         log.debug "Detected URI is relative"
-        log.debug "Appending #{endpoint} to #{path}"
+        log.debug "Appending #{path} to #{endpoint}"
         uri = URI.parse(File.join(endpoint, path))
       end
 
@@ -297,7 +302,7 @@ module ChefAPI
     end
 
     #
-    # Helper method to get the corresponding {Net::HTTP} class from the given
+    # Helper method to get the corresponding +Net::HTTP+ class from the given
     # HTTP verb.
     #
     # @param [#to_s] verb
@@ -385,10 +390,10 @@ module ChefAPI
       log.info "Parsing response as success..."
 
       case response['Content-Type']
-      when 'application/json'
+      when /json/
         log.debug "Detected response as JSON"
         log.debug "Parsing response body as JSON"
-        JSON.parse(response.body, create_additions: false)
+        JSON.parse(response.body)
       else
         log.debug "Detected response as text/plain"
         response.body
@@ -406,10 +411,10 @@ module ChefAPI
       log.info "Parsing response as error..."
 
       case response['Content-Type']
-      when 'application/json'
+      when /json/
         log.debug "Detected error response as JSON"
         log.debug "Parsing error response as JSON"
-        message = JSON.parse(response.body)['error'].first
+        message = Array(JSON.parse(response.body)['error']).join(', ')
       else
         log.debug "Detected response as text/plain"
         message = response.body
@@ -428,6 +433,8 @@ module ChefAPI
         raise Error::HTTPMethodNotAllowed.new(message: message)
       when 406
         raise Error::HTTPNotAcceptable.new(message: message)
+      when 504
+        raise Error::HTTPGatewayTimeout.new(message: message)
       when 500..600
         raise Error::HTTPServerUnavailable.new
       else
