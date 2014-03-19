@@ -18,6 +18,8 @@ module ChefAPI
       attribute :twitter_account, type: String
     end
 
+    has_many :organizations
+
     class << self
       #
       # @see Base.each

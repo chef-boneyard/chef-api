@@ -78,13 +78,13 @@ module ChefAPI
       #   has_many :environments, class_name: 'Environment'
       #
       def has_many(method, options = {})
-        class_name    = options[:class_name] || Util.camelize(method).sub(/s$/, '')
+        class_name    = options[:class_name] || "Resource::#{Util.camelize(method).sub(/s$/, '')}"
         rest_endpoint = options[:rest_endpoint] || method
 
         class_eval <<-EOH, __FILE__, __LINE__ + 1
           def #{method}
             associations[:#{method}] ||=
-              CollectionProxy.new(self, #{class_name}, '#{rest_endpoint}')
+              Resource::CollectionProxy.new(self, #{class_name}, '#{rest_endpoint}')
           end
         EOH
       end
