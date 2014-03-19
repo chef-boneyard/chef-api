@@ -13,7 +13,6 @@ module ChefAPI
     attr_reader :attributes
 
     attr_reader :ignored_attributes
-    attr_reader :transformations
 
     #
     # The list of defined validators for this schema.
@@ -28,15 +27,10 @@ module ChefAPI
     def initialize(&block)
       @attributes = {}
       @ignored_attributes = {}
-      @transformations = {}
+      @flavor_attributes = {}
       @validators = []
 
-      instance_eval(&block) if block
-
-      @attributes.freeze
-      @ignored_attributes.freeze
-      @transformations.freeze
-      @validators.freeze
+      unlock { instance_eval(&block) } if block
     end
 
     #
@@ -47,6 +41,22 @@ module ChefAPI
     #
     def primary_key
       @primary_key ||= @attributes.first[0]
+    end
+
+    #
+    #
+    #
+    def flavor(id, &block)
+      @flavor_attributes[id] = block
+    end
+
+    #
+    #
+    #
+    def load_flavor(id)
+      if block = @flavor_attributes[id]
+        unlock { instance_eval(&block) }
+      end
     end
 
     #
@@ -91,22 +101,20 @@ module ChefAPI
       end
     end
 
-    #
-    # Transform an attribute onto another.
-    #
-    # @example Transform the +:bacon+ attribute onto the +:ham+ attribute
-    #   transform :bacon, ham: true
-    #
-    # @example Transform an attribute with a complex transformation
-    #   transform :bacon, ham: ->(value) { value.split('__', 2).last }
-    #
-    # @param [Symbol] key
-    #   the attribute to transform
-    # @param [Hash] options
-    #   the key-value pair of the transformations to make
-    #
-    def transform(key, options = {})
-      @transformations[key.to_sym] = options
+    private
+
+    def unlock
+      @attributes = @attributes.dup
+      @ignored_attributes = @ignored_attributes.dup
+      @flavor_attributes = @flavor_attributes.dup
+      @validators = @validators.dup
+
+      yield
+
+      @attributes.freeze
+      @ignored_attributes.freeze
+      @flavor_attributes.freeze
+      @validators.freeze
     end
   end
 end

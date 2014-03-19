@@ -384,7 +384,7 @@ module ChefAPI
       # Return an array of all resources in the collection.
       #
       # @note Unless you need the _entire_ collection, please consider using the
-      #  {size} and {each} methods instead as they are much more perforant.
+      # {size} and {each} methods instead as they are much more perforant.
       #
       # @return [Array<Resource::Base>]
       #
@@ -554,6 +554,9 @@ module ChefAPI
     #   the list of prefix options (for nested resources)
     #
     def initialize(attributes = {}, prefix = {})
+      @schema = self.class.schema.dup
+      @schema.load_flavor(self.class.connection.flavor)
+
       @associations = {}
       @_prefix      = prefix
 
@@ -579,7 +582,7 @@ module ChefAPI
     #   the primary key for this resource
     #
     def primary_key
-      self.class.schema.primary_key
+      @schema.primary_key
     end
 
     #
@@ -604,7 +607,7 @@ module ChefAPI
     # @return [Hash<Symbol, Object>]
     #
     def _attributes
-      @_attributes ||= {}.merge(self.class.schema.attributes)
+      @_attributes ||= {}.merge(@schema.attributes)
     end
 
     #
@@ -755,7 +758,7 @@ module ChefAPI
     #   the list of validators for this resource
     #
     def validators
-      @validators ||= self.class.schema.validators
+      @validators ||= @schema.validators
     end
 
     #
@@ -893,7 +896,7 @@ module ChefAPI
     # @return [Boolean]
     #
     def ignore_attribute?(key)
-      self.class.schema.ignored_attributes.has_key?(key.to_sym)
+      @schema.ignored_attributes.has_key?(key.to_sym)
     end
 
     #
