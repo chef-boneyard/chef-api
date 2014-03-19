@@ -39,6 +39,25 @@ module ChefAPI
       end
 
       #
+      # The flavor of the target Chef Server. There are two possible values:
+      #
+      #   - enterprise
+      #   - open_source
+      #
+      # "Enterprise" covers both Hosted Chef and Enterprise Chef. "Open Source"
+      # covers both Chef Zero and Open Source Chef Server.
+      #
+      # @return [true, false]
+      #
+      def flavor
+        if ENV['CHEF_API_FLAVOR']
+          ENV['CHEF_API_FLAVOR'].to_sym
+        else
+          endpoint.include?('/organizations') ? :enterprise : :open_source
+        end
+      end
+
+      #
       # The User Agent header to send along.
       #
       # @return [String]

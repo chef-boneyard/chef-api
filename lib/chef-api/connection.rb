@@ -177,7 +177,8 @@ module ChefAPI
     #   the response body
     #
     def request(verb, path, data = {})
-      log.info "#{verb.to_s.upcase} #{path}..."
+      log.info  "#{verb.to_s.upcase} #{path}..."
+      log.debug "Chef flavor: #{flavor.inspect}"
 
       # Build the URI and request object from the given information
       uri = build_uri(verb, path, data)

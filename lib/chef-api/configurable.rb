@@ -13,6 +13,7 @@ module ChefAPI
       def keys
         @keys ||= [
           :endpoint,
+          :flavor,
           :client,
           :key,
           :proxy_address,
