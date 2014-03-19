@@ -278,9 +278,12 @@ module ChefAPI
 
       # Add any query string parameters
       if [:delete, :get].include?(verb)
-        log.debug "Detected verb deserves a querystring"
-        log.debug "Building querystring using #{params.inspect}"
-        path = [path, to_query_string(params)].compact.join('?')
+        if querystring = to_query_string(params)
+          log.debug "Detected verb deserves a querystring"
+          log.debug "Building querystring using #{params.inspect}"
+          log.debug "Compiled querystring is #{querystring.inspect}"
+          path = [path, querystring].compact.join('?')
+        end
       end
 
       # Parse the URI
