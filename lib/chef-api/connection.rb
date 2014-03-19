@@ -413,7 +413,7 @@ module ChefAPI
       when /json/
         log.debug "Detected error response as JSON"
         log.debug "Parsing error response as JSON"
-        message = JSON.parse(response.body)['error'].first
+        message = Array(JSON.parse(response.body)['error']).join(', ')
       else
         log.debug "Detected response as text/plain"
         message = response.body
