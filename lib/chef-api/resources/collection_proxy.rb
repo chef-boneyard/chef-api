@@ -25,7 +25,7 @@ module ChefAPI
     def initialize(parent, klass, endpoint, prefix = {})
       @parent     = parent
       @klass      = klass
-      @endpoint   = "#{parent.resource_path}/#{endpoint}"
+      @endpoint   = "#{parent.resource_path}/#{endpoint}".squeeze('/')
       @prefix     = prefix
       @collection = load_collection
     end
