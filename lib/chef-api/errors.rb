@@ -1,11 +1,39 @@
+require 'erb'
+
 module ChefAPI
   module Error
+    class ErrorBinding
+      def initialize(options = {})
+        options.each do |key, value|
+          instance_variable_set(:"@#{key}", value)
+        end
+      end
+
+      def get_binding
+        binding
+      end
+    end
+
     class ChefAPIError < StandardError
       def initialize(options = {})
-        class_name = self.class.to_s.split('::').last
-        error_key  = Util.underscore(class_name)
+        @options  = options
+        @filename = options.delete(:_template)
 
-        super I18n.t("chef_api.errors.#{error_key}", options)
+        super()
+      end
+
+      def message
+        erb = ERB.new(File.read(template))
+        erb.result(ErrorBinding.new(@options).get_binding)
+      end
+      alias_method :to_s, :message
+
+      private
+
+      def template
+        class_name = self.class.to_s.split('::').last
+        filename   = @filename || Util.underscore(class_name)
+        ChefAPI.root.join('templates', 'errors', "#{filename}.erb")
       end
     end
 

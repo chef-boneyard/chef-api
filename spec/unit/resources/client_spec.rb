@@ -2,22 +2,6 @@ require 'spec_helper'
 
 module ChefAPI
   describe Resource::Client do
-    describe '.from_file' do
-      it 'raises a permission error when Ruby cannot read the file' do
-        File.stub(:read).and_raise(Errno::EACCES)
-        expect {
-          described_class.from_file('client.pem')
-        }.to raise_error(Error::InsufficientFilePermissions)
-      end
-
-      it 'raises an error when the file does not exist' do
-        File.stub(:read).and_raise(Errno::ENOENT)
-        expect {
-          described_class.from_file('client.pem')
-        }.to raise_error(Error::FileNotFound)
-      end
-    end
-
     describe '.initialize' do
       it 'converts an x509 certificate to a public key' do
         certificate = <<-EOH.gsub(/^ {10}/, '')
