@@ -92,10 +92,6 @@ module ChefAPI
   end
 end
 
-require 'i18n'
-I18n.enforce_available_locales = false
-I18n.load_path << Dir[ChefAPI.root.join('locales', '*.yml').to_s]
-
 # Load the initial default values
 ChefAPI.setup
 
