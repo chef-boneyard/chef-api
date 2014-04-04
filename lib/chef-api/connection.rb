@@ -363,7 +363,7 @@ module ChefAPI
         @parsed_key = key
       end
 
-      if key =~ /(.+)\.pem$/ || File.exists?(key)
+      if key =~ /(.+)\.pem$/ || File.exists?(File.expand_path(key))
         log.debug "Detected private key is the path to a file"
         contents = File.read(File.expand_path(key))
         @parsed_key = OpenSSL::PKey::RSA.new(contents)
