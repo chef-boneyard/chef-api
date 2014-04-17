@@ -1,6 +1,12 @@
 ChefAPI Client
 ==============
-[![Build Status](https://secure.travis-ci.org/sethvargo/chef-api.png?branch=master)](http://travis-ci.org/sethvargo/chef-api)
+[![Gem Version](http://img.shields.io/gem/v/chef-api.svg)][gem]
+[![Build Status](http://img.shields.io/travis/sethvargo/chef-api.svg)][travis]
+[![Gittip](http://img.shields.io/gittip/sethvargo.svg)][gittip]
+
+[gem]: https://rubygems.org/gems/chef-api
+[travis]: http://travis-ci.org/sethvargo/chef-api
+[gittip]: https://www.gittip.com/sethvargo
 
 **ChefAPI is currently in rapid development!** You should not consider this API stable until the official 1.0.0 release.
 
