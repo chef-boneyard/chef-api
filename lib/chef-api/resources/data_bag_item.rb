@@ -31,5 +31,22 @@ module ChefAPI
       id = attributes.delete(:id) || attributes.delete('id')
       super({ id: id, data: attributes }, prefix)
     end
+
+    #
+    # Override the to_hash method to move data to the top scope of hash representation of this resource.
+    #
+    # @return [Hash]
+    #
+    def to_hash()
+      {}.tap do |hash|
+        _attributes.each do |key, value|
+          if key == :data
+            hash.merge! value
+          else
+            hash[key] = value.respond_to?(:to_hash) ? value.to_hash : value
+          end
+        end
+      end
+    end
   end
 end
