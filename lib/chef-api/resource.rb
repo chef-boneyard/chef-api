@@ -13,5 +13,6 @@ module ChefAPI
     autoload :Principal,       'chef-api/resources/principal'
     autoload :Role,            'chef-api/resources/role'
     autoload :User,            'chef-api/resources/user'
+    autoload :Search,          'chef-api/resources/search'
   end
 end
