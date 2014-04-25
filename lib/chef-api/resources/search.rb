@@ -9,7 +9,6 @@ module ChefAPI
     end
 
     class << self
-
       #
       # About search : http://docs.opscode.com/essentials_search.html
       #
@@ -61,7 +60,6 @@ module ChefAPI
       def escape(string)
         string && URI.escape(string.to_s)
       end
-
     end
   end
 end

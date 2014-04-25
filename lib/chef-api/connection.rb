@@ -44,8 +44,8 @@ module ChefAPI
     proxy :nodes,        'Resource::Node'
     proxy :principals,   'Resource::Principal'
     proxy :roles,        'Resource::Role'
-    proxy :users,        'Resource::User'
     proxy :search,       'Resource::Search'
+    proxy :users,        'Resource::User'
 
     #
     # Create a new ChefAPI Connection with the given options. Any options

@@ -12,7 +12,7 @@ module ChefAPI
     autoload :Organization,    'chef-api/resources/organization'
     autoload :Principal,       'chef-api/resources/principal'
     autoload :Role,            'chef-api/resources/role'
-    autoload :User,            'chef-api/resources/user'
     autoload :Search,          'chef-api/resources/search'
+    autoload :User,            'chef-api/resources/user'
   end
 end
