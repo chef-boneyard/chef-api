@@ -24,6 +24,7 @@ module ChefAPI
     it_behaves_like 'a proxy for', :nodes,        'Resource::Node'
     it_behaves_like 'a proxy for', :principals,   'Resource::Principal'
     it_behaves_like 'a proxy for', :roles,        'Resource::Role'
+    it_behaves_like 'a proxy for', :search,       'Resource::Search'
     it_behaves_like 'a proxy for', :users,        'Resource::User'
 
     context '#initialize' do

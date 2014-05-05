@@ -44,6 +44,7 @@ module ChefAPI
     proxy :nodes,        'Resource::Node'
     proxy :principals,   'Resource::Principal'
     proxy :roles,        'Resource::Role'
+    proxy :search,       'Resource::Search'
     proxy :users,        'Resource::User'
 
     #
