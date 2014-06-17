@@ -111,12 +111,14 @@ module ChefAPI
     # @param path (see Connection#request)
     # @param [String, #read] data
     #   the body to use for the request
+    # @param [Hash] params
+    #   the list of query params
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def post(path, data)
-      request(:post, path, data)
+    def post(path, data, params = {})
+      request(:post, path, data, params)
     end
 
     #
@@ -124,12 +126,13 @@ module ChefAPI
     #
     # @param path (see Connection#request)
     # @param data (see Connection#post)
+    # @param params (see Connection#post)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def put(path, data)
-      request(:put, path, data)
+    def put(path, data, params = {})
+      request(:put, path, data, params)
     end
 
     #
@@ -137,12 +140,13 @@ module ChefAPI
     #
     # @param path (see Connection#request)
     # @param data (see Connection#post)
+    # @param params (see Connection#post)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def patch(path, data)
-      request(:patch, path, data)
+    def patch(path, data, params = {})
+      request(:patch, path, data, params)
     end
 
     #
@@ -173,16 +177,22 @@ module ChefAPI
     #   request against
     # @param [#read, Hash, nil] data
     #   the data to use (varies based on the +verb+)
+    # @param [Hash] params
+    #   the params to use for :patch, :post, :put
     #
     # @return [String, Hash]
     #   the response body
     #
-    def request(verb, path, data = {})
+    def request(verb, path, data = {}, params = {})
       log.info  "#{verb.to_s.upcase} #{path}..."
       log.debug "Chef flavor: #{flavor.inspect}"
 
       # Build the URI and request object from the given information
-      uri = build_uri(verb, path, data)
+      if [:delete, :get].include?(verb)
+        uri = build_uri(verb, path, data)
+      else
+        uri = build_uri(verb, path, params)
+      end
       request = class_for_request(verb).new(uri.request_uri)
 
       # Add request headers
@@ -279,13 +289,11 @@ module ChefAPI
       log.info  "Building URI..."
 
       # Add any query string parameters
-      if [:delete, :get].include?(verb)
-        if querystring = to_query_string(params)
-          log.debug "Detected verb deserves a querystring"
-          log.debug "Building querystring using #{params.inspect}"
-          log.debug "Compiled querystring is #{querystring.inspect}"
-          path = [path, querystring].compact.join('?')
-        end
+      if querystring = to_query_string(params)
+        log.debug "Detected verb deserves a querystring"
+        log.debug "Building querystring using #{params.inspect}"
+        log.debug "Compiled querystring is #{querystring.inspect}"
+        path = [path, querystring].compact.join('?')
       end
 
       # Parse the URI
