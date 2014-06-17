@@ -10,6 +10,7 @@ module ChefAPI
     autoload :Environment,     'chef-api/resources/environment'
     autoload :Node,            'chef-api/resources/node'
     autoload :Organization,    'chef-api/resources/organization'
+    autoload :PartialSearch,   'chef-api/resources/partial_search'
     autoload :Principal,       'chef-api/resources/principal'
     autoload :Role,            'chef-api/resources/role'
     autoload :Search,          'chef-api/resources/search'

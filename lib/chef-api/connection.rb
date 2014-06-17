@@ -37,15 +37,16 @@ module ChefAPI
     include Logify
     include ChefAPI::Configurable
 
-    proxy :clients,      'Resource::Client'
-    proxy :cookbooks,    'Resource::Cookbook'
-    proxy :data_bags,    'Resource::DataBag'
-    proxy :environments, 'Resource::Environment'
-    proxy :nodes,        'Resource::Node'
-    proxy :principals,   'Resource::Principal'
-    proxy :roles,        'Resource::Role'
-    proxy :search,       'Resource::Search'
-    proxy :users,        'Resource::User'
+    proxy :clients,        'Resource::Client'
+    proxy :cookbooks,      'Resource::Cookbook'
+    proxy :data_bags,      'Resource::DataBag'
+    proxy :environments,   'Resource::Environment'
+    proxy :nodes,          'Resource::Node'
+    proxy :partial_search, 'Resource::PartialSearch'
+    proxy :principals,     'Resource::Principal'
+    proxy :roles,          'Resource::Role'
+    proxy :search,         'Resource::Search'
+    proxy :users,          'Resource::User'
 
     #
     # Create a new ChefAPI Connection with the given options. Any options
