@@ -36,8 +36,8 @@ module ChefAPI
 
     describe '.build' do
       it 'creates a new instance' do
-        described_class.stub(:new)
-        described_class.stub(:schema).and_return(double(attributes: {}))
+        allow(described_class).to receive(:new)
+        allow(described_class).to receive(:schema).and_return(double(attributes: {}))
 
         expect(described_class).to receive(:new).with({foo: 'bar'}, {})
         described_class.build(foo: 'bar')

@@ -40,12 +40,12 @@ shared_examples_for 'a Chef API resource' do |type, options = {}|
 
   describe '.exists?' do
     it 'returns false when the resource does not exist' do
-      expect(described_class.exists?(resource_id)).to be_false
+      expect(described_class.exists?(resource_id)).to be_falsey
     end
 
     it 'returns true when the resource exists' do
       chef_server.send("create_#{type}", resource_id)
-      expect(described_class.exists?(resource_id)).to be_true
+      expect(described_class.exists?(resource_id)).to be_truthy
     end
   end
 

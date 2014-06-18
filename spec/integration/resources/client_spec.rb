@@ -41,7 +41,7 @@ module ChefAPI
       let(:client) { described_class.from_file('/path/to/bacon.pem') }
 
       before do
-        File.stub(:read).and_return(private_key)
+        allow(File).to receive(:read).and_return(private_key)
       end
 
       it 'loads the client from the server' do
@@ -49,13 +49,13 @@ module ChefAPI
 
         expect(client.name).to eq('bacon')
         expect(client.private_key).to eq(private_key)
-        expect(client.validator).to be_true
+        expect(client.validator).to be_truthy
       end
 
       it 'creates a new instance when the client does not exist' do
         expect(client.name).to eq('bacon')
-        expect(client.validator).to be_false
-        expect(client.new_resource?).to be_true
+        expect(client.validator).to be_falsey
+        expect(client.new_resource?).to be_truthy
       end
     end
   end
