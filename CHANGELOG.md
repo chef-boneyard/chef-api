@@ -1,6 +1,14 @@
 ChefAPI Changelog
 =================
 
+
+v0.3.0 (2014-06-18)
+-------------------
+- Add search functionality
+- Add partial search
+- Update testing harness
+
+
 v0.2.1 (2014-04-17)
 -------------------
 - Fix a series of typographical errors
