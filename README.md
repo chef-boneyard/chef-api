@@ -272,6 +272,27 @@ client = Client.from_file('~/.chef/bacon.pem') #=> #<Resource::Client name: "bac
 ```
 
 
+Searching
+---------
+ChefAPI employs both search and partial search functionality.
+
+```ruby
+# Using regular search
+results = Search.query(:node, '*:*', start: 1)
+results.total #=> 5_000
+results.rows.each do |result|
+  puts result
+end
+
+# Using partial search
+results = PartialSearch.query(:node, { data: ['fqdn'] }, start: 1)
+results.total #=> 2
+results.rows.each do |result|
+  puts result
+end
+```
+
+
 FAQ
 ---
 **Q: How is this different than [Ridley](https://github.com/RiotGames/ridley)?**<br>

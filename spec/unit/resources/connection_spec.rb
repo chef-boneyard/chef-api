@@ -18,14 +18,15 @@ module ChefAPI
       end
     end
 
-    it_behaves_like 'a proxy for', :clients,      'Resource::Client'
-    it_behaves_like 'a proxy for', :data_bags,    'Resource::DataBag'
-    it_behaves_like 'a proxy for', :environments, 'Resource::Environment'
-    it_behaves_like 'a proxy for', :nodes,        'Resource::Node'
-    it_behaves_like 'a proxy for', :principals,   'Resource::Principal'
-    it_behaves_like 'a proxy for', :roles,        'Resource::Role'
-    it_behaves_like 'a proxy for', :search,       'Resource::Search'
-    it_behaves_like 'a proxy for', :users,        'Resource::User'
+    it_behaves_like 'a proxy for', :clients,        'Resource::Client'
+    it_behaves_like 'a proxy for', :data_bags,      'Resource::DataBag'
+    it_behaves_like 'a proxy for', :environments,   'Resource::Environment'
+    it_behaves_like 'a proxy for', :nodes,          'Resource::Node'
+    it_behaves_like 'a proxy for', :partial_search, 'Resource::PartialSearch'
+    it_behaves_like 'a proxy for', :principals,     'Resource::Principal'
+    it_behaves_like 'a proxy for', :roles,          'Resource::Role'
+    it_behaves_like 'a proxy for', :search,         'Resource::Search'
+    it_behaves_like 'a proxy for', :users,          'Resource::User'
 
     context '#initialize' do
       context 'when options are given' do
