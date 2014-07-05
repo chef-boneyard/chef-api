@@ -204,7 +204,18 @@ module ChefAPI
         if data.respond_to?(:read)
           request.body_stream = data
         elsif data.is_a?(Hash)
-          request.form_data = data
+          # If any of the values in the hash are File-like, assume this is a
+          # multi-part post
+          if data.values.any? { |value| value.respond_to?(:read) }
+            body, headers = Multipart::Post.prepare_query(data)
+
+            request.body = body
+            headers.each do |key, value|
+              request[key] = value
+            end
+          else
+            request.form_data = data
+          end
         else
           request.body = data
         end
@@ -500,6 +511,63 @@ module ChefAPI
       headers.each do |key, value|
         log.debug "#{key}: #{value}"
         request[key] = value
+      end
+    end
+  end
+
+  require 'cgi'
+  require 'mime/types'
+
+  module Multipart
+    class Post
+      BOUNDARY = 'ChefAPIMultipartBoundaryBaconIsAwesome!'.freeze
+      CONTENT_TYPE = "multipart/form-data; boundary=#{BOUNDARY}".freeze
+      HEADER = { 'Content-Type' => CONTENT_TYPE }.freeze
+
+      class << self
+        def prepare_query(params)
+          parts = params.collect do |key, value|
+            if value.respond_to?(:read)
+              FileParam.new(key, value.path, value.read)
+            else
+              StringParam.new(key, value)
+            end
+          end
+
+          query = parts
+            .collect { |part| "--#{BOUNDARY}\r\n#{part.to_multipart}" }
+            .join('') + "--#{BOUNDARY}--"
+
+          [query, HEADER]
+        end
+      end
+    end
+
+    class StringParam
+      def initialize(key, value)
+        @key, @value = key, value
+      end
+
+      def to_multipart
+        "Content-Disposition: form-data; " +
+          "name=\"#{CGI::escape(@key)}\"\r\n\r\n#{@value}\r\n"
+      end
+    end
+
+    class FileParam
+      def initialize(key, filename, content)
+        @key = key
+        @filename = filename
+        @content = content
+      end
+
+      def to_multipart
+        mime_type = MIME::Types.type_for(@filename)[0] || MIME::Types['application/octet-stream'][0]
+
+        "Content-Disposition: form-data; " +
+          "name=\"#{CGI::escape(@key)}\"; " +
+          "filename=\"#{@filename}\"\r\n" +
+          "Content-Type: #{mime_type.simplified}\r\n\r\n#{@content}\r\n"
       end
     end
   end
