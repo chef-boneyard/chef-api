@@ -207,12 +207,10 @@ module ChefAPI
           # If any of the values in the hash are File-like, assume this is a
           # multi-part post
           if data.values.any? { |value| value.respond_to?(:read) }
-            body, headers = Multipart::Post.prepare_query(data)
-
-            request.body = body
-            headers.each do |key, value|
-              request[key] = value
-            end
+            multipart = Multipart::Body.new(data)
+            request.content_length = multipart.content_length
+            request.content_type   = multipart.content_type
+            request.body_stream    = multipart.stream
           else
             request.form_data = data
           end
@@ -519,55 +517,159 @@ module ChefAPI
   require 'mime/types'
 
   module Multipart
-    class Post
-      BOUNDARY = 'ChefAPIMultipartBoundaryBaconIsAwesome!'.freeze
-      CONTENT_TYPE = "multipart/form-data; boundary=#{BOUNDARY}".freeze
-      HEADER = { 'Content-Type' => CONTENT_TYPE }.freeze
+    BOUNDARY = '------ChefAPIMultipartBoundary'.freeze
 
-      class << self
-        def prepare_query(params)
-          parts = params.collect do |key, value|
-            if value.respond_to?(:read)
-              FileParam.new(key, value.path, value.read)
-            else
-              StringParam.new(key, value)
-            end
+    class Body
+      def initialize(params = {})
+        params.each do |key, value|
+          if value.respond_to?(:read)
+            parts << FilePart.new(key, value)
+          else
+            parts << ParamPart.new(key, value)
           end
-
-          query = parts
-            .collect { |part| "--#{BOUNDARY}\r\n#{part.to_multipart}" }
-            .join('') + "--#{BOUNDARY}--"
-
-          [query, HEADER]
         end
+
+        parts << EndingPart.new
+      end
+
+      def stream
+        MultiIO.new(*parts.map(&:io))
+      end
+
+      def content_type
+        "multipart/form-data; boundary=#{BOUNDARY}"
+      end
+
+      def content_length
+        parts.map(&:size).inject(:+)
+      end
+
+      private
+
+      def parts
+        @parts ||= []
       end
     end
 
-    class StringParam
-      def initialize(key, value)
-        @key, @value = key, value
+    class MultiIO
+      def initialize(*ios)
+        @ios = ios
+        @index = 0
       end
 
-      def to_multipart
-        "Content-Disposition: form-data; " +
-          "name=\"#{CGI::escape(@key)}\"\r\n\r\n#{@value}\r\n"
+      # Read from IOs in order until `length` bytes have been received.
+      def read(length = nil, outbuf = nil)
+        got_result = false
+        outbuf = outbuf ? outbuf.replace('') : ''
+
+        while io = current_io
+          if result = io.read(length)
+            got_result ||= !result.nil?
+            result.force_encoding('BINARY') if result.respond_to?(:force_encoding)
+            outbuf << result
+            length -= result.length if length
+            break if length == 0
+          end
+          advance_io
+        end
+
+        (!got_result && length) ? nil : outbuf
+      end
+
+      def rewind
+        @ios.each { |io| io.rewind }
+        @index = 0
+      end
+
+      private
+
+      def current_io
+        @ios[@index]
+      end
+
+      def advance_io
+        @index += 1
       end
     end
 
-    class FileParam
-      def initialize(key, filename, content)
-        @key = key
-        @filename = filename
-        @content = content
+    #
+    # A generic key => value part.
+    #
+    class ParamPart
+      def initialize(name, value)
+        @part = build(name, value)
       end
 
-      def to_multipart
-        mime_type = MIME::Types.type_for(@filename)[0] || MIME::Types['application/octet-stream'][0]
+      def io
+        @io ||= StringIO.new(@part)
+      end
 
-        "Content-Disposition: form-data; " +
-          "name=\"#{CGI::escape(@key)}\"; " +
-          "filename=\"#{@filename}\"\r\n" +
-          "Content-Type: #{mime_type.simplified}\r\n\r\n#{@content}\r\n"
+      def size
+        @part.bytesize
+      end
+
+      private
+
+      def build(name, value)
+        part =  %|--#{BOUNDARY}\r\n|
+        part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"\r\n\r\n|
+        part << %|#{value}\r\n|
+        part
+      end
+    end
+
+    #
+    # A File part
+    #
+    class FilePart
+      def initialize(name, file)
+        @file = file
+        @head = build(name, file)
+        @foot = "\r\n"
+      end
+
+      def io
+        @io ||= MultiIO.new(
+          StringIO.new(@head),
+          @file,
+          StringIO.new(@foot)
+        )
+      end
+
+      def size
+        @head.bytesize + @file.size + @foot.bytesize
+      end
+
+      private
+
+      def build(name, file)
+        filename  = File.basename(file.path)
+        mime_type = MIME::Types.type_for(filename)[0] || MIME::Types['application/octet-stream'][0]
+
+        part =  %|--#{BOUNDARY}\r\n|
+        part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"; filename="#{filename}"\r\n|
+        part << %|Content-Length: #{file.size}\r\n|
+        part << %|Content-Type: #{mime_type.simplified}|
+        part << %|Content-Transfer-Encoding: binary\r\n|
+        part << %|\r\n|
+        part
+      end
+    end
+
+    #
+    # The end of the entire request
+    #
+    class EndingPart
+      def initialize
+        @part = "--#{BOUNDARY}--\r\n\r\n"
+      end
+
+      def io
+        @io ||= StringIO.new(@part)
+      end
+
+      def size
+        @part.bytesize
       end
     end
   end
