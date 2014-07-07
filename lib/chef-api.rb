@@ -7,12 +7,14 @@ require 'chef-api/version'
 JSON.create_id = nil
 
 module ChefAPI
+  autoload :Authentication,  'chef-api/authentication'
   autoload :Boolean,         'chef-api/boolean'
   autoload :Configurable,    'chef-api/configurable'
   autoload :Connection,      'chef-api/connection'
   autoload :Defaults,        'chef-api/defaults'
   autoload :Error,           'chef-api/errors'
   autoload :ErrorCollection, 'chef-api/error_collection'
+  autoload :Multipart,       'chef-api/multipart'
   autoload :Resource,        'chef-api/resource'
   autoload :Schema,          'chef-api/schema'
   autoload :Util,            'chef-api/util'

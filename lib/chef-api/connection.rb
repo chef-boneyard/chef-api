@@ -202,25 +202,35 @@ module ChefAPI
       # Setup PATCH/POST/PUT
       if [:patch, :post, :put].include?(verb)
         if data.respond_to?(:read)
+          log.info "Detected file/io presence"
           request.body_stream = data
         elsif data.is_a?(Hash)
           # If any of the values in the hash are File-like, assume this is a
           # multi-part post
           if data.values.any? { |value| value.respond_to?(:read) }
+            log.info "Detected multipart body"
+
             multipart = Multipart::Body.new(data)
+
+            log.debug "Content-Type: #{multipart.content_type}"
+            log.debug "Content-Length: #{multipart.content_length}"
+
             request.content_length = multipart.content_length
             request.content_type   = multipart.content_type
+
             request.body_stream    = multipart.stream
           else
+            log.info "Detected form data"
             request.form_data = data
           end
         else
+          log.info "Detected regular body"
           request.body = data
         end
       end
 
       # Sign the request
-      add_signing_headers(verb, uri, request, parsed_key)
+      add_signing_headers(verb, uri.path, request)
 
       # Create the HTTP connection object - since the proxy information defaults
       # to +nil+, we can just pass it to the initializer method instead of doing
@@ -352,49 +362,6 @@ module ChefAPI
     private
 
     #
-    # Parse the given private key. Users can specify the private key as:
-    #
-    #   - the path to the key on disk
-    #   - the raw string key
-    #   - an +OpenSSL::PKey::RSA object+
-    #
-    # Any other implementations are not supported and will likely explode.
-    #
-    # @todo
-    #   Handle errors when the file cannot be read due to insufficient
-    #   permissions
-    #
-    # @return [OpenSSL::PKey::RSA]
-    #   the RSA private key as an OpenSSL object
-    #
-    def parsed_key
-      return @parsed_key if @parsed_key
-
-      log.info "Parsing private key..."
-
-      if key.nil?
-        log.warn "No private key given!"
-        raise 'No private key given!'
-      end
-
-      if key.is_a?(OpenSSL::PKey::RSA)
-        log.debug "Detected private key is an OpenSSL Ruby object"
-        @parsed_key = key
-      end
-
-      if key =~ /(.+)\.pem$/ || File.exists?(File.expand_path(key))
-        log.debug "Detected private key is the path to a file"
-        contents = File.read(File.expand_path(key))
-        @parsed_key = OpenSSL::PKey::RSA.new(contents)
-      else
-        log.debug "Detected private key was the literal string key"
-        @parsed_key = OpenSSL::PKey::RSA.new(key)
-      end
-
-      @parsed_key
-    end
-
-    #
     # Parse the response object and manipulate the result based on the given
     # +Content-Type+ header. For now, this method only parses JSON, but it
     # could be expanded in the future to accept other content types.
@@ -433,7 +400,7 @@ module ChefAPI
       when /json/
         log.debug "Detected error response as JSON"
         log.debug "Parsing error response as JSON"
-        message = Array(JSON.parse(response.body)['error']).join(', ')
+        message = JSON.parse(response.body)
       else
         log.debug "Detected response as text/plain"
         message = response.body
@@ -485,191 +452,33 @@ module ChefAPI
     end
 
     #
-    # Use mixlib-auth to create a signed header auth.
+    # Create a signed header authentication that can be consumed by
+    # +Mixlib::Authentication+.
     #
+    # @param [Symbol] verb
+    #   the HTTP verb (e.g. +:get+)
+    # @param [String] path
+    #   the requested URI path (e.g. +/resources/foo+)
     # @param [Net::HTTP::Request] request
     #
-    def add_signing_headers(verb, uri, request, key)
+    def add_signing_headers(verb, path, request)
       log.info "Adding signed header authentication..."
 
-      unless defined?(Mixlib::Authentication::SignedHeaderAuth)
-        require 'mixlib/authentication/signedheaderauth'
-      end
+      authentication = Authentication.from_options(
+        user: client,
+        key:  key,
+        verb: verb,
+        path: path,
+        body: request.body || request.body_stream,
+      )
 
-      headers = Mixlib::Authentication::SignedHeaderAuth.signing_object(
-        :http_method => verb,
-        :body        => request.body || '',
-        :host        => "#{uri.host}:#{uri.port}",
-        :path        => uri.path,
-        :timestamp   => Time.now.utc.iso8601,
-        :user_id     => client,
-        :file        => '',
-      ).sign(key)
-
-      headers.each do |key, value|
+      authentication.headers.each do |key, value|
         log.debug "#{key}: #{value}"
         request[key] = value
       end
-    end
-  end
 
-  require 'cgi'
-  require 'mime/types'
-
-  module Multipart
-    BOUNDARY = '------ChefAPIMultipartBoundary'.freeze
-
-    class Body
-      def initialize(params = {})
-        params.each do |key, value|
-          if value.respond_to?(:read)
-            parts << FilePart.new(key, value)
-          else
-            parts << ParamPart.new(key, value)
-          end
-        end
-
-        parts << EndingPart.new
-      end
-
-      def stream
-        MultiIO.new(*parts.map(&:io))
-      end
-
-      def content_type
-        "multipart/form-data; boundary=#{BOUNDARY}"
-      end
-
-      def content_length
-        parts.map(&:size).inject(:+)
-      end
-
-      private
-
-      def parts
-        @parts ||= []
-      end
-    end
-
-    class MultiIO
-      def initialize(*ios)
-        @ios = ios
-        @index = 0
-      end
-
-      # Read from IOs in order until `length` bytes have been received.
-      def read(length = nil, outbuf = nil)
-        got_result = false
-        outbuf = outbuf ? outbuf.replace('') : ''
-
-        while io = current_io
-          if result = io.read(length)
-            got_result ||= !result.nil?
-            result.force_encoding('BINARY') if result.respond_to?(:force_encoding)
-            outbuf << result
-            length -= result.length if length
-            break if length == 0
-          end
-          advance_io
-        end
-
-        (!got_result && length) ? nil : outbuf
-      end
-
-      def rewind
-        @ios.each { |io| io.rewind }
-        @index = 0
-      end
-
-      private
-
-      def current_io
-        @ios[@index]
-      end
-
-      def advance_io
-        @index += 1
-      end
-    end
-
-    #
-    # A generic key => value part.
-    #
-    class ParamPart
-      def initialize(name, value)
-        @part = build(name, value)
-      end
-
-      def io
-        @io ||= StringIO.new(@part)
-      end
-
-      def size
-        @part.bytesize
-      end
-
-      private
-
-      def build(name, value)
-        part =  %|--#{BOUNDARY}\r\n|
-        part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"\r\n\r\n|
-        part << %|#{value}\r\n|
-        part
-      end
-    end
-
-    #
-    # A File part
-    #
-    class FilePart
-      def initialize(name, file)
-        @file = file
-        @head = build(name, file)
-        @foot = "\r\n"
-      end
-
-      def io
-        @io ||= MultiIO.new(
-          StringIO.new(@head),
-          @file,
-          StringIO.new(@foot)
-        )
-      end
-
-      def size
-        @head.bytesize + @file.size + @foot.bytesize
-      end
-
-      private
-
-      def build(name, file)
-        filename  = File.basename(file.path)
-        mime_type = MIME::Types.type_for(filename)[0] || MIME::Types['application/octet-stream'][0]
-
-        part =  %|--#{BOUNDARY}\r\n|
-        part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"; filename="#{filename}"\r\n|
-        part << %|Content-Length: #{file.size}\r\n|
-        part << %|Content-Type: #{mime_type.simplified}|
-        part << %|Content-Transfer-Encoding: binary\r\n|
-        part << %|\r\n|
-        part
-      end
-    end
-
-    #
-    # The end of the entire request
-    #
-    class EndingPart
-      def initialize
-        @part = "--#{BOUNDARY}--\r\n\r\n"
-      end
-
-      def io
-        @io ||= StringIO.new(@part)
-      end
-
-      def size
-        @part.bytesize
+      if request.body_stream
+        request.body_stream.rewind
       end
     end
   end

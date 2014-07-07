@@ -23,3 +23,10 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = 'random'
 end
+
+#
+# @return [String]
+#
+def rspec_support_file(*joins)
+  File.join(File.expand_path('../support', __FILE__), *joins)
+end

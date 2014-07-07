@@ -20,7 +20,6 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ['lib']
 
-  spec.add_dependency 'logify',                '~> 0.1'
-  spec.add_dependency 'mixlib-authentication', '~> 1.3'
-  spec.add_dependency 'mime-types',            '~> 2.3'
+  spec.add_dependency 'logify',     '~> 0.1'
+  spec.add_dependency 'mime-types', '~> 2.3'
 end
