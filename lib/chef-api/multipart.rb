@@ -137,7 +137,7 @@ module ChefAPI
         part =  %|--#{BOUNDARY}\r\n|
         part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"; filename="#{filename}"\r\n|
         part << %|Content-Length: #{file.size}\r\n|
-        part << %|Content-Type: #{mime_type.simplified}|
+        part << %|Content-Type: #{mime_type.simplified}\r\n|
         part << %|Content-Transfer-Encoding: binary\r\n|
         part << %|\r\n|
         part
