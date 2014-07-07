@@ -1,6 +1,13 @@
 ChefAPI Changelog
 =================
 
+v0.4.1 (2014-07-07)
+-------------------
+- Remove dependency on mixlib-authentication
+- Fix a bug where Content-Type headers were not sent properly
+- Switch to rake for test running
+- Improve test coverage with fixtures
+
 v0.4.0 (2014-07-05)
 -------------------
 - Support multipart POST
