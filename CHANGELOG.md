@@ -1,6 +1,12 @@
 ChefAPI Changelog
 =================
 
+v0.5.0 (2014-07-10)
+-------------------
+- Relax the dependency on mime-types
+- When searching for the file object of a multipart filepart, find the first IO that not a StringIO
+- Rewind IO objects after digesting them
+
 v0.4.1 (2014-07-07)
 -------------------
 - Remove dependency on mixlib-authentication
