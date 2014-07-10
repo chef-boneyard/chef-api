@@ -21,5 +21,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'logify',     '~> 0.1'
-  spec.add_dependency 'mime-types', '~> 2.3'
+  spec.add_dependency 'mime-types'
 end
