@@ -118,7 +118,7 @@ module ChefAPI
       else
         if @body.is_a?(Multipart::MultiIO)
           filepart = @body.ios.find { |io| io.is_a?(Multipart::MultiIO) }
-          file     = filepart.ios.find { |io| io.is_a?(File) }
+          file     = filepart.ios.find { |io| !io.is_a?(StringIO) }
 
           @content_hash = hash(file).chomp
         else
