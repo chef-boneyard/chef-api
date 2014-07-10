@@ -280,6 +280,8 @@ module ChefAPI
         digester.update(buffer)
       end
 
+      io.rewind
+
       Base64.encode64(digester.digest)
     end
 
