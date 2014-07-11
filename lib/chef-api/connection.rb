@@ -98,11 +98,12 @@ module ChefAPI
     # @param path (see Connection#request)
     # @param [Hash] params
     #   the list of query params
+    # @param request_options (see Connection#request)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def get(path, params = {})
+    def get(path, params = {}, request_options = {})
       request(:get, path, params)
     end
 
@@ -114,11 +115,12 @@ module ChefAPI
     #   the body to use for the request
     # @param [Hash] params
     #   the list of query params
+    # @param request_options (see Connection#request)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def post(path, data, params = {})
+    def post(path, data, params = {}, request_options = {})
       request(:post, path, data, params)
     end
 
@@ -128,11 +130,12 @@ module ChefAPI
     # @param path (see Connection#request)
     # @param data (see Connection#post)
     # @param params (see Connection#post)
+    # @param request_options (see Connection#request)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def put(path, data, params = {})
+    def put(path, data, params = {}, request_options = {})
       request(:put, path, data, params)
     end
 
@@ -142,11 +145,12 @@ module ChefAPI
     # @param path (see Connection#request)
     # @param data (see Connection#post)
     # @param params (see Connection#post)
+    # @param request_options (see Connection#request)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def patch(path, data, params = {})
+    def patch(path, data, params = {}, request_options = {})
       request(:patch, path, data, params)
     end
 
@@ -155,11 +159,12 @@ module ChefAPI
     #
     # @param path (see Connection#request)
     # @param params (see Connection#get)
+    # @param request_options (see Connection#request)
     #
     # @raise (see Connection#request)
     # @return (see Connection#request)
     #
-    def delete(path, params = {})
+    def delete(path, params = {}, request_options = {})
       request(:delete, path, params)
     end
 
@@ -180,11 +185,16 @@ module ChefAPI
     #   the data to use (varies based on the +verb+)
     # @param [Hash] params
     #   the params to use for :patch, :post, :put
+    # @param [Hash] request_options
+    #   the list of options/configurables for the actual request
+    #
+    # @option request_options [true, false] :sign (default: +true+)
+    #   whether to sign the request using mixlib authentication headers
     #
     # @return [String, Hash]
     #   the response body
     #
-    def request(verb, path, data = {}, params = {})
+    def request(verb, path, data = {}, params = {}, request_options = {})
       log.info  "#{verb.to_s.upcase} #{path}..."
       log.debug "Chef flavor: #{flavor.inspect}"
 
@@ -230,7 +240,11 @@ module ChefAPI
       end
 
       # Sign the request
-      add_signing_headers(verb, uri.path, request)
+      if request_options[:sign] == false
+        log.info "Skipping signed header authentication (user requested)..."
+      else
+        add_signing_headers(verb, uri.path, request)
+      end
 
       # Create the HTTP connection object - since the proxy information defaults
       # to +nil+, we can just pass it to the initializer method instead of doing
