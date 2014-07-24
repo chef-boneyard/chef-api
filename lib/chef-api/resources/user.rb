@@ -75,7 +75,7 @@ module ChefAPI
       #   the parsed JSON response from the server
       #
       def authenticate(options = {})
-        connection.post('/authenticate_user', options)
+        connection.post('/authenticate_user', options.to_json)
       end
     end
   end
