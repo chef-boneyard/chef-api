@@ -283,15 +283,109 @@ results.total #=> 5_000
 results.rows.each do |result|
   puts result
 end
-
-# Using partial search
-results = PartialSearch.query(:node, { data: ['fqdn'] }, start: 1)
-results.total #=> 2
-results.rows.each do |result|
-  puts result
-end
 ```
 
+## Partial Search
+Partial Search in `chef-api` is similar to the `partial-search` cookbook as described in
+[About Search: Partial Search](http://docs.getchef.com/essentials_search.html#partial-search)
+
+The primary differences between the `partial_search` used in a the _chef cookbook_
+and the one used in `chef-api` is:
+
+* The function's argument parameter order
+* There is no top level key called `keys` in the `keys` parameter
+_(phew... so meta... examples help)_
+
+The chef-api call `PartialSearch.query` signature is:
+
+```ruby
+PartialSearch.query(index, keys, query = '*:*', options = {})
+```
+
+* `index`: The search index as a symbol (such as `:node`, `:client`, `:environment`,
+`:role`, `:<DATA_BAG_NAME>`)
+* `keys`: A Hash of `key/key_paths`. The `key` is an arbitrary symbol that
+will be the returned `key` pointing to the returned _values_ for the
+attributes you specify in the `key_paths` _(see examples below for clarity)_
+    * `key_paths` are an array of strings that are the actual
+      attriubte keys you want returned. Nested attributes are
+      additional items in the array.
+* `query`: An optional string that is the query you want to use. If
+  not specified, it defaults to `'*:*'`
+* `options`: An optional hash of search options. Defaults to `{}`
+    * `rows`: The number of rows to be returned.
+    * `sort`: The order in which search results will be sorted.
+    * `start`: The row at which return results will begin.
+
+### Partial Search Examples
+
+* Using partial search with the default query and no options and a
+  single attribute key
+
+This example is going to find all nodes (search defaults to `'*:*'`)
+and the rows method of the result will have the hash of selected
+attributes. In this case we are going to get the `'hostname'` attribute
+and return it as a hash with the key `'hname'`.
+
+```ruby
+results = PartialSearch.query(:node, { hname: ['hostname'] })
+  #=> #<Resource::PartialSearch index: "node", total: 2, start: 0, rows: [{"hname"=>"ip-10-0-1-115"}, {"hname"=>"ip-10-0-1-239"}]>
+results.total #=> 2
+results.rows[0]['hname'] #=> "ip-10-0-1-115"
+results.rows[1]['hname'] #=> "ip-10-0-1-239"
+```
+
+Note that `'hname'` is an arbitrary key that was specified in the
+`PartialSearch.query` call. It could have been `'hostname'` or
+`'foobar'` and the only difference is that would be the key in the result.
+
+```ruby
+results = PartialSearch.query(:node, { foobar: ['hostname'] })
+  #=> #<Resource::PartialSearch index: "node", total: 2, start: 0, rows: [{"foobar"=>"ip-10-0-1-115"}, {"foobar"=>"ip-10-0-1-239"}]>
+results.total #=> 2
+results.rows[0]['foobar'] #=> "ip-10-0-1-115"
+results.rows[1]['foobar'] #=> "ip-10-0-1-239"
+```
+
+* Using partial search with the default query and no options and a
+  a nested attribute key
+
+This is the same as the previous example but instead of a simple
+single attribute to return, we're going to return a nested attribute.
+
+We want to get the attribute yum['main']['distroverpkg'] and have it come
+back as the value for the key `'yum_distro_ver_pkg'`. We specify nested
+attribute keys as an array of strings. The strings are in the order of
+nesting.
+
+`yum['main']['distroverpkg']` maps to `['yum', 'main', 'distroverpkg']`
+
+```ruby
+results = PartialSearch.query(:node, { yum_distro_ver_pkg: ['yum', 'main', 'distroverpkg'] })
+  #=> #<Resource::PartialSearch index: "node", total: 2, start: 0, rows: [{"yum_distro_ver_pkg"=>nil}, {"yum_distro_ver_pkg"=>"centos-release"}]>
+results.rows[1]['yum_distro_ver_pkg'] #=> "centos-release"
+```
+
+* Using partial search with all the parameters and returning several individual
+attributes and  a nested attribute key
+
+In this case we're going to search for nodes that have the recipe:
+`'recipe:rm_phoenix_me::auto_scale'` (Note we have to escape the
+colons in the search string)
+
+And we're goint go set the `options` to `{ start: 1 }`. It will still
+find two results total, but only return the second node (index starts
+at 0)
+
+```ruby
+results = PartialSearch.query(:node, { ipaddress: ['ipaddress'], hostname: ['hostname'], yum_main_distro_ver_pkg: ['yum', 'main', 'distroverpkg'] }, 'recipe:rm_phoenix_me\:\:auto_scale', { start: 1 })
+  #=> #<Resource::PartialSearch index: "node", total: 2, start: 1, rows: [{"ipaddress"=>"10.0.1.239", "hostname"=>"ip-10-0-1-239", "yum_main_distro_ver_pkg"=>"centos-release"}]>
+results.total #=> 2
+results.rows.count #=> 1
+results.rows[0]['ipaddress'] #=>"10.0.1.239"
+results.rows[0]['hostname'] #=> "ip-10-0-1-239"
+results.rows[0]['yum_main_distro_ver_pkg'] #=> "centos-release"
+```
 
 FAQ
 ---
