@@ -927,7 +927,7 @@ module ChefAPI
     #
     # @return [String]
     #
-    def to_json
+    def to_json(*)
       JSON.fast_generate(to_hash)
     end
 
