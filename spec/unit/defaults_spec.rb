@@ -18,6 +18,8 @@ module ChefAPI
 
     context 'with a config file' do
       before(:each) do
+        subject.instance_variable_set(:@config, nil)
+        allow(File).to receive(:exist?).with(anything()).and_return(true)
         allow(File).to receive(:read).and_return("{\n"\
             "\"CHEF_API_ENDPOINT\": \"test_endpoint\",\n" \
             "\"CHEF_API_USER_AGENT\": \"test_user_agent\"\n" \
