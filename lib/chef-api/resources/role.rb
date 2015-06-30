@@ -4,6 +4,7 @@ module ChefAPI
 
     schema do
       attribute :name,                type: String, primary: true, required: true
+      attribute :json_class,          type: String, default: "Chef::Role"
       attribute :description,         type: String
       attribute :default_attributes,  type: Hash,   default: {}
       attribute :override_attributes, type: Hash,   default: {}
