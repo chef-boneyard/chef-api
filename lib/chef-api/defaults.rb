@@ -153,10 +153,9 @@ module ChefAPI
         if ENV['CHEF_API_SSL_VERIFY'].nil? && config['CHEF_API_SSL_VERIFY'].nil?
           true
         else
-          %w[t y].include?(ENV['CHEF_API_SSL_VERIFY'].downcase[0]) || %w[t y].include?(config['CHEF_API_SSL_VERIFY'])
+          %w[t y].include?(ENV['CHEF_API_SSL_VERIFY'].downcase[0]) || config['CHEF_API_SSL_VERIFY']
         end
       end
-
     end
   end
 end
