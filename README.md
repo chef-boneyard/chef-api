@@ -102,6 +102,16 @@ export CHEF_API_CLIENT=bacon
 export CHEF_API_KEY=~/.chef/bacon.pem
 ```
 
+In addition, you can configure the environment variables in a JSON-formatted config file either placed in ~/.chef-api or placed in a location configured via the environment variable `CHEF_API_CONFIG`. For example:
+
+```json
+{
+  "CHEF_API_ENDPOINT": "https://api.opscode.com/organizations/meats",
+  "CHEF_API_CLIENT": "bacon",
+  "CHEF_API_KEY": "~/.chef/bacon.pem"
+}
+```
+
 If you prefer a more object-oriented approach (or if you want to support multiple simultaneous connections), you can create a raw `ChefAPI::Connection` object. All of the options that are available on the `ChefAPI` object are also available on a raw connection:
 
 ```ruby

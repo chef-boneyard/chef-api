@@ -1,4 +1,5 @@
 require 'chef-api/version'
+require 'json'
 
 module ChefAPI
   module Defaults
@@ -18,6 +19,11 @@ module ChefAPI
         Hash[Configurable.keys.map { |key| [key, send(key)] }]
       end
 
+      def config
+        path = File.expand_path(ENV['CHEF_API_CONFIG'] || '~/.chef-api')
+        @config ||= File.exist?(path) ? JSON.parse(File.read(path), symbolize_names: true) : {}
+      end
+
       #
       # The endpoint where the Chef Server lives. This is equivalent to the
       # +chef_server_url+ in Chef terminology. If you are using Enterprise
@@ -35,7 +41,7 @@ module ChefAPI
       # @return [String] (default: +https://api.opscode.com/+)
       #
       def endpoint
-        ENV['CHEF_API_ENDPOINT'] || ENDPOINT
+        ENV['CHEF_API_ENDPOINT'] || config[:CHEF_API_ENDPOINT] || ENDPOINT
       end
 
       #
@@ -52,6 +58,8 @@ module ChefAPI
       def flavor
         if ENV['CHEF_API_FLAVOR']
           ENV['CHEF_API_FLAVOR'].to_sym
+        elsif config[:CHEF_API_FLAVOR]
+          config[:CHEF_API_FLAVOR]
         else
           endpoint.include?('/organizations') ? :enterprise : :open_source
         end
@@ -63,7 +71,7 @@ module ChefAPI
       # @return [String]
       #
       def user_agent
-        ENV['CHEF_API_USER_AGENT'] || USER_AGENT
+        ENV['CHEF_API_USER_AGENT'] || config[:CHEF_API_USER_AGENT] || USER_AGENT
       end
 
       #
@@ -74,7 +82,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def client
-        ENV['CHEF_API_CLIENT']
+        ENV['CHEF_API_CLIENT'] || config[:CHEF_API_CLIENT]
       end
 
       #
@@ -85,7 +93,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def key
-        ENV['CHEF_API_KEY']
+         ENV['CHEF_API_KEY'] || config[:CHEF_API_KEY]
       end
       #
       # The HTTP Proxy server address as a string
@@ -93,7 +101,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def proxy_address
-        ENV['CHEF_API_PROXY_ADDRESS']
+        ENV['CHEF_API_PROXY_ADDRESS'] || config[:CHEF_API_PROXY_ADDRESS]
       end
 
       #
@@ -102,7 +110,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def proxy_password
-        ENV['CHEF_API_PROXY_PASSWORD']
+        ENV['CHEF_API_PROXY_PASSWORD'] || config[:CHEF_API_PROXY_PASSWORD]
       end
 
       #
@@ -111,7 +119,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def proxy_port
-        ENV['CHEF_API_PROXY_PORT']
+        ENV['CHEF_API_PROXY_PORT'] || config[:CHEF_API_PROXY_PORT]
       end
 
       #
@@ -120,7 +128,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def proxy_username
-        ENV['CHEF_API_PROXY_USERNAME']
+        ENV['CHEF_API_PROXY_USERNAME'] || config[:CHEF_API_PROXY_USERNAME]
       end
 
       #
@@ -129,7 +137,7 @@ module ChefAPI
       # @return [String, nil]
       #
       def ssl_pem_file
-        ENV['CHEF_API_SSL_PEM_FILE']
+        ENV['CHEF_API_SSL_PEM_FILE'] || config[:CHEF_API_SSL_PEM_FILE]
       end
 
       #
@@ -138,10 +146,10 @@ module ChefAPI
       # @return [true, false]
       #
       def ssl_verify
-        if ENV['CHEF_API_SSL_VERIFY'].nil?
+        if ENV['CHEF_API_SSL_VERIFY'].nil? && config[:CHEF_API_SSL_VERIFY].nil?
           true
         else
-          %w[t y].include?(ENV['CHEF_API_SSL_VERIFY'].downcase[0])
+          %w[t y].include?(ENV['CHEF_API_SSL_VERIFY'].downcase[0]) || %w[t y].include?(config[:CHEF_API_SSL_VERIFY])
         end
       end
 
