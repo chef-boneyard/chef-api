@@ -227,7 +227,7 @@ module ChefAPI
     # @return [String]
     #
     def encrypted_request
-      canonical_key.private_encrypt(canonical_request).chomp
+      canonical_key.private_encrypt(canonical_request)
     end
 
     #
