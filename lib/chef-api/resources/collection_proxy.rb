@@ -115,6 +115,14 @@ module ChefAPI
     alias_method :size, :count
 
     #
+    # Shuffle the order of the items in this collection.
+    #
+    def shuffle!
+      @collection = Hash[collection.to_a.shuffle]
+      self
+    end
+
+    #
     # The string representation of this collection proxy.
     #
     # @return [String]
