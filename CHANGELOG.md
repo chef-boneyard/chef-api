@@ -1,5 +1,10 @@
 # ChefAPI Changelog
 
+## v0.7.1 (2016-12-13)
+
+- Don't set nil `JSON.create_id` as it's unnecessary in recent versions
+  of the JSON library
+
 ## v0.6.0 (2016-05-05)
 
 - Remove support for Ruby 1.9
