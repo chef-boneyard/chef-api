@@ -1,7 +1,8 @@
 rvm:
-  - 1.9.3
   - 2.0.0
   - 2.1
+  - 2.2
+  - 2.3.0
 
 # Don't install local development gems on Travis, use parallel gem downloads
 bundler_args: --without development --jobs 7
