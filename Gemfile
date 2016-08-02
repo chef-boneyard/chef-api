@@ -7,6 +7,6 @@ end
 
 group :test do
   gem 'chef-zero', '~> 2.0.0'
-  gem 'rake',      '~> 10.3'
+  gem 'rake',      '~> 11.0'
   gem 'rspec',     '~> 3.0'
 end
