@@ -20,7 +20,9 @@ module ChefAPI
 
     describe '.collection_path' do
       it 'raises an exception if the collection name is not set' do
-        expect { described_class.collection_path }.to raise_error
+        expect {
+          described_class.collection_path
+        }.to raise_error(ArgumentError, 'collection_path not set for Class')
       end
 
       it 'sets the collection name' do
