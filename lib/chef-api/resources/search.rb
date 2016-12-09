@@ -10,7 +10,7 @@ module ChefAPI
 
     class << self
       #
-      # About search : http://docs.opscode.com/essentials_search.html
+      # About search : https://docs.chef.io/chef_search.html
       #
       # @param [String] index
       #   the name of the index to search
