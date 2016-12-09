@@ -7,7 +7,7 @@ module ChefAPI
   #
   # Connection object for the ChefAPI API.
   #
-  # @see http://docs.opscode.com/api_chef_server.html
+  # @see https://docs.chef.io/api_chef_server.html
   #
   class Connection
     class << self
