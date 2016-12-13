@@ -1,4 +1,5 @@
 require 'chef-api/version'
+require 'pathname'
 require 'json'
 
 module ChefAPI
@@ -24,8 +25,32 @@ module ChefAPI
       #
       # @return [Hash]
       def config
-        path = File.expand_path(ENV['CHEF_API_CONFIG'] || '~/.chef-api')
-        @config ||= File.exist?(path) ? JSON.parse(File.read(path)) : {}
+        path = config_path
+        @config ||= path.exist? ? JSON.parse(path.read) : {}
+      end
+
+      #
+      # Pathname to configuration file, or a blank Pathname.
+      #
+      # @return [Pathname] an expanded Pathname or a non-existent Pathname
+      def config_path
+        if result = chef_api_config_path
+          Pathname(result).expand_path
+        else
+          Pathname('')
+        end
+      end
+
+      #
+      # String representation of path to configuration file
+      #
+      # @return [String, nil] Path to config file, or nil
+      def chef_api_config_path
+        ENV['CHEF_API_CONFIG'] || if ENV.key?('HOME')
+                                    '~/.chef-api'
+                                  else
+                                    nil
+                                  end
       end
 
       #
