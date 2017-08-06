@@ -4,6 +4,9 @@
 
 - Don't set nil `JSON.create_id` as it's unnecessary in recent versions
   of the JSON library
+- Avoid ArgumentError when no HOME environment variable is set
+- Add Resource::Organization proxy
+- Update all comments to point to the correct Docs site URLs
 
 ## v0.6.0 (2016-05-05)
 
