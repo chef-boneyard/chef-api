@@ -1,6 +1,6 @@
 # ChefAPI Changelog
 
-## v0.7.1 (2016-12-13)
+## v0.7.1 (2017-08-06)
 
 - Don't set nil `JSON.create_id` as it's unnecessary in recent versions
   of the JSON library
