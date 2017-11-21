@@ -245,9 +245,7 @@ module ChefAPI
 
         # Custom pem files, no problem!
         if ssl_pem_file
-          pem = File.read(ssl_pem_file)
-          connection.cert = OpenSSL::X509::Certificate.new(pem)
-          connection.key = OpenSSL::PKey::RSA.new(pem)
+          connection.ca_file = ssl_pem_file
           connection.verify_mode = OpenSSL::SSL::VERIFY_PEER
         end
 
