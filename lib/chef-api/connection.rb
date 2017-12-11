@@ -41,6 +41,7 @@ module ChefAPI
     proxy :cookbooks,      'Resource::Cookbook'
     proxy :data_bags,      'Resource::DataBag'
     proxy :environments,   'Resource::Environment'
+    proxy :groups,         'Resource::Group'
     proxy :nodes,          'Resource::Node'
     proxy :partial_search, 'Resource::PartialSearch'
     proxy :principals,     'Resource::Principal'
