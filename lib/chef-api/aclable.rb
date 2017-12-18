@@ -14,7 +14,6 @@ module ChefAPI
 
     def acl
       unless @acl
-        puts "acl nicht geladen"
         self.load_acl
       end
       @acl
@@ -26,7 +25,6 @@ module ChefAPI
         %w(create update grant read delete).each{|action|
           if @acl[action] != @orig_acl_data[action]
             url = "#{self.acl_path}/#{action}"
-            puts("updating #{url}")
             self.class.connection.put(url, {action => @acl[action]}.to_json)
           end
         }
