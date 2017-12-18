@@ -1,3 +1,4 @@
+require "chef-api/aclable"
 module ChefAPI
   module Resource
     autoload :Base,            'chef-api/resources/base'
