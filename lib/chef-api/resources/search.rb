@@ -33,7 +33,13 @@ module ChefAPI
         end
 
         path = expanded_collection_path(index: index.to_s)
-        response = connection.get(path, params)
+
+        response = if filter_result = options[:filter_result]
+          connection.post(path, filter_result.to_json, params)
+        else
+          connection.get(path, params)
+        end
+
         from_json(response, index: index.to_s)
       end
     end
