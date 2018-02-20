@@ -253,6 +253,11 @@ module ChefAPI
       connection = Net::HTTP.new(uri.host, uri.port,
         proxy_address, proxy_port, proxy_username, proxy_password)
 
+      # Large or filtered result sets can take a long time to return, so allow
+      # setting a longer read_timeout for our client if we want to make an
+      # expensive request.
+      connection.read_timeout = read_timeout if read_timeout
+
       # Apply SSL, if applicable
       if uri.scheme == 'https'
         # Turn on SSL

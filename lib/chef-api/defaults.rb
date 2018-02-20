@@ -181,6 +181,17 @@ module ChefAPI
           %w[t y].include?(ENV['CHEF_API_SSL_VERIFY'].downcase[0]) || config['CHEF_API_SSL_VERIFY']
         end
       end
+
+      #
+      # Network request read timeout in seconds (default: 60)
+      #
+      # @return [Integer, nil]
+      #
+      def read_timeout
+        timeout_from_env = ENV['CHEF_API_READ_TIMEOUT'] || config['CHEF_API_READ_TIMEOUT']
+
+        Integer(timeout_from_env) unless timeout_from_env.nil?
+      end
     end
   end
 end
