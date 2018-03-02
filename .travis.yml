@@ -2,9 +2,10 @@ sudo: false
 dist: trusty
 
 rvm:
-  - 2.2.5
-  - 2.3.1
-  - 2.4.1
+  - 2.2.9
+  - 2.3.6
+  - 2.4.3
+  - 2.5.0
 
 # Don't install local development gems on Travis, use parallel gem downloads
 bundler_args: --without development --jobs 7
