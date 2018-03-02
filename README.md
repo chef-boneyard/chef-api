@@ -1,21 +1,18 @@
-ChefAPI Client
-==============
-[![Gem Version](http://img.shields.io/gem/v/chef-api.svg)][gem]
-[![Build Status](http://img.shields.io/travis/sethvargo/chef-api.svg)][travis]
+# ChefAPI Client
 
-[gem]: https://rubygems.org/gems/chef-api
-[travis]: http://travis-ci.org/sethvargo/chef-api
+[![Gem Version](http://img.shields.io/gem/v/chef-api.svg)][gem] [![Build Status](http://img.shields.io/travis/sethvargo/chef-api.svg)][travis]
 
 **ChefAPI is currently in rapid development!** You should not consider this API stable until the official 1.0.0 release.
 
 ChefAPI is a dependency-minimal Ruby client for interacting with a Chef Server. It adopts many patterns and principles from Rails
 
+## Quick start
 
-Quick start
------------
 Install via Rubygems:
 
-    $ gem install chef-api
+```
+$ gem install chef-api
+```
 
 or add it to your Gemfile if you are using Bundler:
 
@@ -44,6 +41,7 @@ ChefAPI::Resource::Node.all
 ```
 
 ### Create a connection
+
 Before you can make a request, you must give the ChefAPI your connection information and credentials.
 
 ```ruby
@@ -145,11 +143,13 @@ end
 ```
 
 ### Making Requests
+
 The ChefAPI gem attempts to wrap the Chef Server API in an object-oriented and Rubyesque way. All of the methods and API calls are heavily documented inline using YARD. For a full list of every possible option, please see the inline documentation.
 
 Most resources can be listed, retrieved, created, updated, and destroyed. In programming, this is commonly referred to as "CRUD".
 
 #### Create
+
 There are multiple ways to create a new Chef resource on the remote Chef Server. You can use the native `create` method. It accepts a list of parameters as a hash:
 
 ```ruby
@@ -174,12 +174,14 @@ client.save #=> #<Resource::Client name: "new-client", admin: false, ...>
 ```
 
 #### Read
+
 Most resources have the following "read" functions:
 
 - `.list`, `.all`, and `.each` for listing Chef resources
 - `.fetch` for getting a single Chef resource with the given identifier
 
 ##### Listing
+
 You can get a list of all the identifiers for a given type of resource using the `.list` method. This is especially useful when you only want to list items by their identifier, since it only issues a single API request. For example, to get the names of all of the Client resources:
 
 ```ruby
@@ -210,6 +212,7 @@ Client.map(&:public_key) #=> ["-----BEGIN PUBLIC KEY-----\nMIGfMA...", "-----BEG
 ```
 
 ##### Fetching
+
 You can also fetch a single resource from the Chef Server using the given identifier. Each Chef resource has a unique identifier; internally this is called the "primary key". For most resources, this attribute is "name". You can fetch a resource by it's primary key using the `.fetch` method:
 
 ```ruby
@@ -223,6 +226,7 @@ Client.fetch('not-a-real-client') #=> nil
 ```
 
 #### Update
+
 You can update a resource using it's unique identifier and a list of hash attributes:
 
 ```ruby
@@ -238,6 +242,7 @@ client.save
 ```
 
 #### Delete
+
 You can destroy a resource using it's unique identifier:
 
 ```ruby
@@ -252,6 +257,7 @@ client.destroy #=> true
 ```
 
 ### Validations
+
 Each resource includes its own validations. If these validations fail, they exhibit custom errors messages that are added to the resource. For example, Chef clients **must** have a name attribute. This is validated on the client side:
 
 ```ruby
@@ -278,15 +284,15 @@ client.save! #=> InvalidResource: There were errors saving your resource: `name'
 ```
 
 ### Objects on Disk
+
 ChefAPI also has the ability to read and manipulate objects on disk. This varies from resource-to-resource, but the `.from_file` method accepts a path to a resource on disk and loads as much information about the object on disk as it can. The attributes are then merged with the remote resource, if one exists. For example, you can read a Client resource from disk:
 
 ```ruby
 client = Client.from_file('~/.chef/bacon.pem') #=> #<Resource::Client name: "bacon", admin: false, public_key: nil, private_key: "..." ...>
 ```
 
+## Searching
 
-Searching
----------
 ChefAPI employs both search and partial search functionality.
 
 ```ruby
@@ -305,15 +311,13 @@ results.rows.each do |result|
 end
 ```
 
+## FAQ
 
-FAQ
----
 **Q: How is this different than [Ridley](https://github.com/RiotGames/ridley)?**<br>
 A: Ridley is optimized for highly concurrent connections with support for multiple Chef Servers. ChefAPI is designed for the "average user" who does not need the advanced use cases that Ridley provides. For this reason, the ChefAPI is incredibly opinionated about the features it will include. If you need complex features, take a look at [Ridley](https://github.com/RiotGames/ridley).
 
+## Development
 
-Development
------------
 1. Clone the project on GitHub
 2. Create a feature branch
 3. Submit a Pull Request
@@ -324,10 +328,9 @@ Important Notes:
 - **The tests must be be idempotent.** The HTTP calls made during a test should be able to be run over and over.
 - **Tests are order independent.** The default RSpec configuration randomizes the test order, so this should not be a problem.
 
+## License & Authors
 
-License & Authors
------------------
-- Author: Seth Vargo <sethvargo@gmail.com>
+- Author: Seth Vargo [sethvargo@gmail.com](mailto:sethvargo@gmail.com)
 
 ```text
 Copyright 2013-2014 Seth Vargo
@@ -344,3 +347,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+[gem]: https://rubygems.org/gems/chef-api
+[travis]: http://travis-ci.org/sethvargo/chef-api

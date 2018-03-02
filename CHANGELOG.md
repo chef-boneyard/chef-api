@@ -1,5 +1,10 @@
 # ChefAPI Changelog
 
+## v0.8.0 (2018-03-02)
+
+- support `filter_result` in chef queries 
+- support a configurable read_timeout
+
 ## v0.7.1 (2017-08-06)
 
 - Don't set nil `JSON.create_id` as it's unnecessary in recent versions
