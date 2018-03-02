@@ -84,6 +84,11 @@ ChefAPI.configure do |config|
   config.proxy_password = 'password'
   config.proxy_address  = 'my.proxy.server' # or 10.0.0.50
   config.proxy_port     = '8080'
+
+  # If you want to make queries that return a very large result chef, you might
+  # need to adjust the timeout limits for the network request. (NOTE: time is
+  # given in seconds).
+  config.read_timeout = 120
 end
 ```
 
