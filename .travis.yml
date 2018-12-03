@@ -1,8 +1,10 @@
+distro: xenial
+language: ruby
+cache: bundler
 sudo: false
-dist: trusty
 
 rvm:
-  - 2.2.9
+  - 2.2.10
   - 2.3.8
   - 2.4.5
   - 2.5.3
