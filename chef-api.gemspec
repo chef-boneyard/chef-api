@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.description   = 'A tiny Chef API client with minimal dependencies'
   spec.summary       = 'A Chef API client in Ruby'
   spec.homepage      = 'https://github.com/sethvargo/chef-api'
-  spec.license       = 'Apache 2.0'
+  spec.license       = 'Apache-2.0'
 
   spec.required_ruby_version = '>= 2.2'
 
