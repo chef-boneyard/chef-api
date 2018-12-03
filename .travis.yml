@@ -3,9 +3,9 @@ dist: trusty
 
 rvm:
   - 2.2.9
-  - 2.3.6
-  - 2.4.3
-  - 2.5.0
+  - 2.3.8
+  - 2.4.5
+  - 2.5.3
 
 # Don't install local development gems on Travis, use parallel gem downloads
 bundler_args: --without development --jobs 7
