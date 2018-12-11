@@ -1,6 +1,6 @@
 # ChefAPI Client
 
-[![Gem Version](http://img.shields.io/gem/v/chef-api.svg)][gem] [![Build Status](http://img.shields.io/travis/sethvargo/chef-api.svg)][travis]
+[![Gem Version](http://img.shields.io/gem/v/chef-api.svg)][gem] [![Build Status](http://img.shields.io/travis/tas50/chef-api.svg)][travis]
 
 ChefAPI is a dependency-minimal Ruby client for interacting with a Chef Server. It adopts many patterns and principles from Rails
 
