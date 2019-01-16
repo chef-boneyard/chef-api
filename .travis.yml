@@ -1,4 +1,4 @@
-distro: xenial
+dist: xenial
 language: ruby
 cache: bundler
 sudo: false
