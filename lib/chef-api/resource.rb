@@ -8,6 +8,7 @@ module ChefAPI
     autoload :DataBag,         'chef-api/resources/data_bag'
     autoload :DataBagItem,     'chef-api/resources/data_bag_item'
     autoload :Environment,     'chef-api/resources/environment'
+    autoload :Group,           'chef-api/resources/group'
     autoload :Node,            'chef-api/resources/node'
     autoload :Organization,    'chef-api/resources/organization'
     autoload :PartialSearch,   'chef-api/resources/partial_search'
