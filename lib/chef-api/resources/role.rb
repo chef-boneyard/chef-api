@@ -1,5 +1,6 @@
 module ChefAPI
   class Resource::Role < Resource::Base
+    include ChefAPI::AclAble
     collection_path '/roles'
 
     schema do

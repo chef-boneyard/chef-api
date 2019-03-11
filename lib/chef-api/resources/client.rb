@@ -1,5 +1,6 @@
 module ChefAPI
   class Resource::Client < Resource::Base
+    include ChefAPI::AclAble
     collection_path '/clients'
 
     schema do
