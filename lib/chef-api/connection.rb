@@ -40,6 +40,7 @@ module ChefAPI
     proxy :clients,        'Resource::Client'
     proxy :cookbooks,      'Resource::Cookbook'
     proxy :data_bags,      'Resource::DataBag'
+    proxy :data_bag_item,  'Resource::DataBagItem'
     proxy :environments,   'Resource::Environment'
     proxy :groups,         'Resource::Group'
     proxy :nodes,          'Resource::Node'
