@@ -36,7 +36,7 @@ module ChefAPI
         bag = new(name: name)
 
         Util.fast_collect(Dir["#{path}/*.json"]) do |item|
-          DataBagItem.from_file(item, bag)
+          Resource::DataBagItem.from_file(item, bag)
         end
       end
 
