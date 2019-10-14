@@ -6,7 +6,7 @@ group :development do
 end
 
 group :test do
-  gem 'chef-zero', '~> 2.0.0'
+  gem 'chef-zero', '~> 5.3.2'
   gem 'rake'
   gem 'rspec',     '~> 3.0'
 end
