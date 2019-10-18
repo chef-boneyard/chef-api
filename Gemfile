@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-gemspec
+gemspec name: 'chef-api'
 
 group :development do
   gem 'pry'
