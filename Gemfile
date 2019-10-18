@@ -2,7 +2,7 @@ source "https://rubygems.org"
 gemspec name: "chef-api"
 
 group :development do
-  gem "chefstyle", git: "https://github.com/chef/chefstyle.git", branch: "master"
+  gem "chefstyle"
   gem "rake", ">= 10.1.0"
   gem "rspec",     "~> 3.0"
   gem "chef-zero", "~> 2.0.0"
