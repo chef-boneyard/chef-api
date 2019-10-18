@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::DataBagItem < Resource::Base
-    collection_path '/data/:bag'
+    collection_path "/data/:bag"
 
     schema do
       attribute :id,   type: String, primary: true, required: true
@@ -28,10 +28,9 @@ module ChefAPI
     def initialize(attributes = {}, prefix = {}, bag = nil)
       @bag = bag || Resource::DataBag.fetch(prefix[:bag])
 
-      id = attributes.delete(:id) || attributes.delete('id')
+      id = attributes.delete(:id) || attributes.delete("id")
       super({ id: id, data: attributes }, prefix)
     end
-
 
     #
     # Override the to_hash method to move data to the upper scope.

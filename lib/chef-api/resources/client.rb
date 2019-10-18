@@ -1,7 +1,7 @@
 module ChefAPI
   class Resource::Client < Resource::Base
     include ChefAPI::AclAble
-    collection_path '/clients'
+    collection_path "/clients"
 
     schema do
       attribute :name,        type: String,  primary: true, required: true
@@ -14,7 +14,7 @@ module ChefAPI
     end
 
     # @todo implement
-    protect 'chef-webui', 'chef-validator'
+    protect "chef-webui", "chef-validator"
 
     class << self
       #
@@ -49,7 +49,7 @@ module ChefAPI
     #
     def initialize(attributes = {}, prefix = {})
       if certificate = attributes.delete(:certificate) ||
-                       attributes.delete('certificate')
+          attributes.delete("certificate")
         x509 = OpenSSL::X509::Certificate.new(certificate)
         attributes[:public_key] = x509.public_key.to_pem
       end
@@ -77,6 +77,7 @@ module ChefAPI
     #
     def regenerate_keys
       raise Error::CannotRegenerateKey if new_resource?
+
       update(private_key: true).save!
       self
     end

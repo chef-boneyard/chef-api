@@ -5,7 +5,7 @@ module ChefAPI
   # of +cookbook_version+ objects that fully detail the layout of a cookbook.
   #
   class Resource::Cookbook < Resource::Base
-    collection_path '/cookbooks'
+    collection_path "/cookbooks"
 
     schema do
       attribute :name, type: String, primary: true, required: true
@@ -13,7 +13,7 @@ module ChefAPI
 
     has_many :versions,
       class_name: CookbookVersion,
-      rest_endpoint: '/?num_versions=all'
+      rest_endpoint: "/?num_versions=all"
 
     class << self
       def from_json(response, prefix = {})

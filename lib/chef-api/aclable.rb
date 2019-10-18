@@ -1,7 +1,7 @@
 module ChefAPI
   module AclAble
     def acl_path
-      self.resource_path + '/_acl'
+      resource_path + "/_acl"
     end
 
     def load_acl
@@ -14,7 +14,7 @@ module ChefAPI
 
     def acl
       unless @acl
-        self.load_acl
+        load_acl
       end
       @acl
     end
@@ -22,14 +22,14 @@ module ChefAPI
     def save!
       super
       if @acl != @orig_acl_data
-        %w(create update grant read delete).each{|action|
+        %w{create update grant read delete}.each { |action|
           if @acl[action] != @orig_acl_data[action]
-            url = "#{self.acl_path}/#{action}"
-            self.class.connection.put(url, {action => @acl[action]}.to_json)
+            url = "#{acl_path}/#{action}"
+            self.class.connection.put(url, { action => @acl[action] }.to_json)
           end
         }
       end
     end
   end
-    
+
 end

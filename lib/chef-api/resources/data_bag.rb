@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::DataBag < Resource::Base
-    collection_path '/data'
+    collection_path "/data"
 
     schema do
       attribute :name, type: String, primary: true, required: true
@@ -26,9 +26,9 @@ module ChefAPI
       # @return [Array<DataBagItem>]
       #
       def from_file(path, name = File.basename(path))
-        path  = File.expand_path(path)
+        path = File.expand_path(path)
 
-        raise Error::FileNotFound.new(path: path)  unless File.exists?(path)
+        raise Error::FileNotFound.new(path: path)  unless File.exist?(path)
         raise Error::NotADirectory.new(path: path) unless File.directory?(path)
 
         raise ArgumentError unless File.directory?(path)

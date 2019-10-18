@@ -14,10 +14,10 @@ module ChefAPI
     def underscore(string)
       string
         .to_s
-        .gsub(/::/, '/')
-        .gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
-        .gsub(/([a-z\d])([A-Z])/,'\1_\2')
-        .tr('-', '_')
+        .gsub(/::/, "/")
+        .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
+        .gsub(/([a-z\d])([A-Z])/, '\1_\2')
+        .tr("-", "_")
         .downcase
     end
 
@@ -32,8 +32,8 @@ module ChefAPI
     def camelize(string)
       string
         .to_s
-        .split('_')
-        .map { |e| e.capitalize }
+        .split("_")
+        .map(&:capitalize)
         .join
     end
 
@@ -49,7 +49,7 @@ module ChefAPI
       length = options[:length] || 30
 
       if string.length > length
-        string[0..length-3] + '...'
+        string[0..length - 3] + "..."
       else
         string
       end
@@ -77,7 +77,7 @@ module ChefAPI
     #
     def safe_read(path)
       path     = File.expand_path(path)
-      name     = File.basename(path, '.*')
+      name     = File.basename(path, ".*")
       contents = File.read(path)
 
       [name, contents]

@@ -1,21 +1,21 @@
-require 'json'
-require 'logify'
-require 'pathname'
-require 'chef-api/version'
+require "json"
+require "logify"
+require "pathname"
+require "chef-api/version"
 
 module ChefAPI
-  autoload :Authentication,  'chef-api/authentication'
-  autoload :Boolean,         'chef-api/boolean'
-  autoload :Configurable,    'chef-api/configurable'
-  autoload :Connection,      'chef-api/connection'
-  autoload :Defaults,        'chef-api/defaults'
-  autoload :Error,           'chef-api/errors'
-  autoload :ErrorCollection, 'chef-api/error_collection'
-  autoload :Multipart,       'chef-api/multipart'
-  autoload :Resource,        'chef-api/resource'
-  autoload :Schema,          'chef-api/schema'
-  autoload :Util,            'chef-api/util'
-  autoload :Validator,       'chef-api/validator'
+  autoload :Authentication,  "chef-api/authentication"
+  autoload :Boolean,         "chef-api/boolean"
+  autoload :Configurable,    "chef-api/configurable"
+  autoload :Connection,      "chef-api/connection"
+  autoload :Defaults,        "chef-api/defaults"
+  autoload :Error,           "chef-api/errors"
+  autoload :ErrorCollection, "chef-api/error_collection"
+  autoload :Multipart,       "chef-api/multipart"
+  autoload :Resource,        "chef-api/resource"
+  autoload :Schema,          "chef-api/schema"
+  autoload :Util,            "chef-api/util"
+  autoload :Validator,       "chef-api/validator"
 
   #
   # @todo Document this and why it's important
@@ -54,7 +54,7 @@ module ChefAPI
     # @return [Pathname]
     #
     def root
-      @root ||= Pathname.new(File.expand_path('../../', __FILE__))
+      @root ||= Pathname.new(File.expand_path("../../", __FILE__))
     end
 
     #
@@ -93,4 +93,3 @@ end
 
 # Load the initial default values
 ChefAPI.setup
-

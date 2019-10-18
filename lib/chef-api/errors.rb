@@ -1,4 +1,4 @@
-require 'erb'
+require "erb"
 
 module ChefAPI
   module Error
@@ -31,9 +31,9 @@ module ChefAPI
       private
 
       def template
-        class_name = self.class.to_s.split('::').last
+        class_name = self.class.to_s.split("::").last
         filename   = @filename || Util.underscore(class_name)
-        ChefAPI.root.join('templates', 'errors', "#{filename}.erb")
+        ChefAPI.root.join("templates", "errors", "#{filename}.erb")
       end
     end
 

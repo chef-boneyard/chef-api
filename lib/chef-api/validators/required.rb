@@ -4,7 +4,7 @@ module ChefAPI
       value = resource._attributes[attribute]
 
       if value.to_s.strip.empty?
-        resource.errors.add(attribute, 'must be present')
+        resource.errors.add(attribute, "must be present")
       end
     end
   end

@@ -1,7 +1,7 @@
-require 'net/http'
-require 'net/https'
-require 'openssl'
-require 'uri'
+require "net/http"
+require "net/https"
+require "openssl"
+require "uri"
 
 module ChefAPI
   #
@@ -37,19 +37,19 @@ module ChefAPI
     include Logify
     include ChefAPI::Configurable
 
-    proxy :clients,        'Resource::Client'
-    proxy :cookbooks,      'Resource::Cookbook'
-    proxy :data_bags,      'Resource::DataBag'
-    proxy :data_bag_item,  'Resource::DataBagItem'
-    proxy :environments,   'Resource::Environment'
-    proxy :groups,         'Resource::Group'
-    proxy :nodes,          'Resource::Node'
-    proxy :partial_search, 'Resource::PartialSearch'
-    proxy :principals,     'Resource::Principal'
-    proxy :roles,          'Resource::Role'
-    proxy :search,         'Resource::Search'
-    proxy :users,          'Resource::User'
-    proxy :organizations,  'Resource::Organization'
+    proxy :clients,        "Resource::Client"
+    proxy :cookbooks,      "Resource::Cookbook"
+    proxy :data_bags,      "Resource::DataBag"
+    proxy :data_bag_item,  "Resource::DataBagItem"
+    proxy :environments,   "Resource::Environment"
+    proxy :groups,         "Resource::Group"
+    proxy :nodes,          "Resource::Node"
+    proxy :partial_search, "Resource::PartialSearch"
+    proxy :principals,     "Resource::Principal"
+    proxy :roles,          "Resource::Role"
+    proxy :search,         "Resource::Search"
+    proxy :users,          "Resource::User"
+    proxy :organizations,  "Resource::Organization"
 
     #
     # Create a new ChefAPI Connection with the given options. Any options
@@ -75,9 +75,9 @@ module ChefAPI
       # Use any options given, but fall back to the defaults set on the module
       ChefAPI::Configurable.keys.each do |key|
         value = if options[key].nil?
-          ChefAPI.instance_variable_get(:"@#{key}")
-        else
-          options[key]
+                  ChefAPI.instance_variable_get(:"@#{key}")
+                else
+                  options[key]
         end
 
         instance_variable_set(:"@#{key}", value)
@@ -202,7 +202,7 @@ module ChefAPI
       log.debug "Chef flavor: #{flavor.inspect}"
 
       # Build the URI and request object from the given information
-      if [:delete, :get].include?(verb)
+      if %i{delete get}.include?(verb)
         uri = build_uri(verb, path, data)
       else
         uri = build_uri(verb, path, params)
@@ -213,7 +213,7 @@ module ChefAPI
       add_request_headers(request)
 
       # Setup PATCH/POST/PUT
-      if [:patch, :post, :put].include?(verb)
+      if %i{patch post put}.include?(verb)
         if data.respond_to?(:read)
           log.info "Detected file/io presence"
           request.body_stream = data
@@ -261,7 +261,7 @@ module ChefAPI
       connection.read_timeout = read_timeout if read_timeout
 
       # Apply SSL, if applicable
-      if uri.scheme == 'https'
+      if uri.scheme == "https"
         # Turn on SSL
         connection.use_ssl = true
 
@@ -295,7 +295,7 @@ module ChefAPI
 
         case response
         when Net::HTTPRedirection
-          redirect = URI.parse(response['location']).to_s
+          redirect = URI.parse(response["location"]).to_s
           log.debug "Performing HTTP redirect to #{redirect}"
           request(verb, redirect, data)
         when Net::HTTPSuccess
@@ -328,14 +328,14 @@ module ChefAPI
     # @return [URI]
     #
     def build_uri(verb, path, params = {})
-      log.info  "Building URI..."
+      log.info "Building URI..."
 
       # Add any query string parameters
       if querystring = to_query_string(params)
         log.debug "Detected verb deserves a querystring"
         log.debug "Building querystring using #{params.inspect}"
         log.debug "Compiled querystring is #{querystring.inspect}"
-        path = [path, querystring].compact.join('?')
+        path = [path, querystring].compact.join("?")
       end
 
       # Parse the URI
@@ -378,7 +378,7 @@ module ChefAPI
     def to_query_string(hash)
       hash.map do |key, value|
         "#{URI.escape(key.to_s)}=#{URI.escape(value.to_s)}"
-      end.join('&')[/.+/]
+      end.join("&")[/.+/]
     end
 
     private
@@ -397,7 +397,7 @@ module ChefAPI
     def success(response)
       log.info "Parsing response as success..."
 
-      case response['Content-Type']
+      case response["Content-Type"]
       when /json/
         log.debug "Detected response as JSON"
         log.debug "Parsing response body as JSON"
@@ -418,7 +418,7 @@ module ChefAPI
     def error(response)
       log.info "Parsing response as error..."
 
-      case response['Content-Type']
+      case response["Content-Type"]
       when /json/
         log.debug "Detected error response as JSON"
         log.debug "Parsing error response as JSON"
@@ -459,12 +459,12 @@ module ChefAPI
       log.info "Adding request headers..."
 
       headers = {
-        'Accept'         => 'application/json',
-        'Content-Type'   => 'application/json',
-        'Connection'     => 'keep-alive',
-        'Keep-Alive'     => '30',
-        'User-Agent'     => user_agent,
-        'X-Chef-Version' => '11.4.0',
+        "Accept" => "application/json",
+        "Content-Type" => "application/json",
+        "Connection" => "keep-alive",
+        "Keep-Alive" => "30",
+        "User-Agent" => user_agent,
+        "X-Chef-Version" => "11.4.0",
       }
 
       headers.each do |key, value|
@@ -491,7 +491,7 @@ module ChefAPI
         key:  key,
         verb: verb,
         path: path,
-        body: request.body || request.body_stream,
+        body: request.body || request.body_stream
       )
 
       authentication.headers.each do |key, value|

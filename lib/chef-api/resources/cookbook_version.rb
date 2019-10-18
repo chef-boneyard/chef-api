@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::CookbookVersion < Resource::Base
-    collection_path '/cookbooks/:cookbook'
+    collection_path "/cookbooks/:cookbook"
 
     schema do
       attribute :name,          type: String,  primary: true, required: true

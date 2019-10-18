@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 module ChefAPI
   describe Defaults do
@@ -6,39 +6,39 @@ module ChefAPI
       subject.instance_variable_set(:@config, nil)
     end
 
-    context 'without a config file' do
+    context "without a config file" do
       before(:each) do
-        allow(subject).to receive(:config).and_return(Hash.new)
+        allow(subject).to receive(:config).and_return({})
       end
 
-      it 'returns the default endpoint' do
+      it "returns the default endpoint" do
         expect(subject.endpoint).to eq subject::ENDPOINT
       end
 
-      it 'returns the default user agent' do
+      it "returns the default user agent" do
         expect(subject.user_agent).to eq subject::USER_AGENT
       end
     end
 
-    context 'without a config file and no ENV vars to find it' do
+    context "without a config file and no ENV vars to find it" do
       around do |example|
-        old_conf = ENV.delete('CHEF_API_CONFIG')
-        old_home = ENV.delete('HOME')
+        old_conf = ENV.delete("CHEF_API_CONFIG")
+        old_home = ENV.delete("HOME")
         example.run
-        ENV['CHEF_API_CONFIG'] = old_conf
-        ENV['HOME'] = old_home
+        ENV["CHEF_API_CONFIG"] = old_conf
+        ENV["HOME"] = old_home
       end
 
-      it 'returns the default without errors' do
+      it "returns the default without errors" do
         expect { subject.config }.not_to raise_error
       end
 
-      it 'returns the default which is the empty hash' do
+      it "returns the default which is the empty hash" do
         expect(subject.config).to eq({})
       end
     end
 
-    context 'with a config file' do
+    context "with a config file" do
       before(:each) do
         config_content = "{\n"\
             "\"CHEF_API_ENDPOINT\": \"test_endpoint\",\n" \
@@ -48,12 +48,12 @@ module ChefAPI
         allow(subject).to receive(:config_path).and_return(path)
       end
 
-      it 'returns the overridden value for endpoint' do
-        expect(subject.endpoint).to eq 'test_endpoint'
+      it "returns the overridden value for endpoint" do
+        expect(subject.endpoint).to eq "test_endpoint"
       end
 
-      it 'returns the overridden value for user agent' do
-        expect(subject.user_agent).to eq 'test_user_agent'
+      it "returns the overridden value for user agent" do
+        expect(subject.user_agent).to eq "test_user_agent"
       end
     end
   end
