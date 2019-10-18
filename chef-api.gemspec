@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'chef-api/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'chef-infra-api'
+  spec.name          = 'chef-api'
   spec.version       = ChefAPI::VERSION
   spec.authors       = ['Seth Vargo', 'Tim Smith']
   spec.email         = ['sethvargo@gmail.com', 'tsmith84@gmail.com']

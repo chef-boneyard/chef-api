@@ -1,11 +1,17 @@
 # ChefAPI Changelog
+<!-- latest_release -->
+<!-- latest_release -->
+<!-- release_rollup -->
+<!-- release_rollup -->
 
+<!-- latest_stable_release -->
 ## v0.9.0 (2018-12-03)
 
 - Removed support for the EOL Ruby 2.1 release
 - Removed the note about heavy development in the readme
 - Updated the gemspec to use a SPDX compliant license string
 - Slimmed the gem down to only ship the necessary files for execution vs. full development
+<!-- latest_stable_release -->
 
 ## v0.8.0 (2018-03-02)
 
