@@ -1,26 +1,23 @@
 # ChefAPI Changelog
-<!-- latest_release 0.10.0 -->
-## [v0.10.0](https://github.com/chef/chef-api/tree/v0.10.0) (2019-10-18)
-
-#### Merged Pull Requests
-- Require Ruby 2.3+ and remove travis config [#78](https://github.com/chef/chef-api/pull/78) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- release_rollup since=0.9.0 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Require Ruby 2.3+ and remove travis config [#78](https://github.com/chef/chef-api/pull/78) ([tas50](https://github.com/tas50)) <!-- 0.10.0 -->
-- Wire up Expeditor to release chef-api and chef-infra-api [#77](https://github.com/chef/chef-api/pull/77) ([tas50](https://github.com/tas50)) <!-- 0.9.1 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [v0.10.0](https://github.com/chef/chef-api/tree/v0.10.0) (2019-10-18)
+
+#### Merged Pull Requests
+- Wire up Expeditor to release chef-api and chef-infra-api [#77](https://github.com/chef/chef-api/pull/77) ([tas50](https://github.com/tas50))
+- Require Ruby 2.3+ and remove travis config [#78](https://github.com/chef/chef-api/pull/78) ([tas50](https://github.com/tas50))
+<!-- latest_stable_release -->
+
 ## v0.9.0 (2018-12-03)
 
 - Removed support for the EOL Ruby 2.1 release
 - Removed the note about heavy development in the readme
 - Updated the gemspec to use a SPDX compliant license string
 - Slimmed the gem down to only ship the necessary files for execution vs. full development
-<!-- latest_stable_release -->
 
 ## v0.8.0 (2018-03-02)
 
