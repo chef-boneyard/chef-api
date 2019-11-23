@@ -34,7 +34,7 @@ module ChefAPI
     # @return [Array<String>]
     #
     def full_messages
-      self.map do |key, errors|
+      map do |key, errors|
         errors.map do |error|
           "`#{key}' #{error}"
         end

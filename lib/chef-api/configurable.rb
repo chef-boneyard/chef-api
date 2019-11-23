@@ -11,20 +11,20 @@ module ChefAPI
       # @return [Array<Symbol>]
       #
       def keys
-        @keys ||= [
-          :endpoint,
-          :flavor,
-          :client,
-          :key,
-          :proxy_address,
-          :proxy_password,
-          :proxy_port,
-          :proxy_username,
-          :ssl_pem_file,
-          :ssl_verify,
-          :user_agent,
-          :read_timeout,
-        ]
+        @keys ||= %i{
+          endpoint
+          flavor
+          client
+          key
+          proxy_address
+          proxy_password
+          proxy_port
+          proxy_username
+          ssl_pem_file
+          ssl_verify
+          user_agent
+          read_timeout
+        }
       end
     end
 

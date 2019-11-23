@@ -1,8 +1,8 @@
 module ChefAPI
   module Validator
-    autoload :Base,       'chef-api/validators/base'
-    autoload :Required,   'chef-api/validators/required'
-    autoload :Type,       'chef-api/validators/type'
+    autoload :Base,       "chef-api/validators/base"
+    autoload :Required,   "chef-api/validators/required"
+    autoload :Type,       "chef-api/validators/type"
 
     #
     # Find a validator by the given key.

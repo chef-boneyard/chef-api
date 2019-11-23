@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::Environment < Resource::Base
-    collection_path '/environments'
+    collection_path "/environments"
 
     schema do
       attribute :name,                type: String, primary: true, required: true

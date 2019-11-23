@@ -1,7 +1,7 @@
-require 'base64'
-require 'digest'
-require 'openssl'
-require 'time'
+require "base64"
+require "digest"
+require "openssl"
+require "time"
 
 #
 # DEBUG steps:
@@ -17,14 +17,14 @@ module ChefAPI
     # signing the full request body instead of just the uploaded file parameter.
     SIGN_FULL_BODY = false
 
-    SIGNATURE = 'algorithm=sha1;version=1.0;'.freeze
+    SIGNATURE = "algorithm=sha1;version=1.0;".freeze
 
     # Headers
-    X_OPS_SIGN          = 'X-Ops-Sign'.freeze
-    X_OPS_USERID        = 'X-Ops-Userid'.freeze
-    X_OPS_TIMESTAMP     = 'X-Ops-Timestamp'.freeze
-    X_OPS_CONTENT_HASH  = 'X-Ops-Content-Hash'.freeze
-    X_OPS_AUTHORIZATION = 'X-Ops-Authorization'.freeze
+    X_OPS_SIGN          = "X-Ops-Sign".freeze
+    X_OPS_USERID        = "X-Ops-Userid".freeze
+    X_OPS_TIMESTAMP     = "X-Ops-Timestamp".freeze
+    X_OPS_CONTENT_HASH  = "X-Ops-Content-Hash".freeze
+    X_OPS_AUTHORIZATION = "X-Ops-Authorization".freeze
 
     class << self
       #
@@ -96,9 +96,9 @@ module ChefAPI
     #
     def headers
       {
-        X_OPS_SIGN         => SIGNATURE,
-        X_OPS_USERID       => @user,
-        X_OPS_TIMESTAMP    => canonical_timestamp,
+        X_OPS_SIGN => SIGNATURE,
+        X_OPS_USERID => @user,
+        X_OPS_TIMESTAMP => canonical_timestamp,
         X_OPS_CONTENT_HASH => content_hash,
       }.merge(signature_lines)
     end
@@ -114,7 +114,7 @@ module ChefAPI
       return @content_hash if @content_hash
 
       if SIGN_FULL_BODY
-        @content_hash = hash(@body || '').chomp
+        @content_hash = hash(@body || "").chomp
       else
         if @body.is_a?(Multipart::MultiIO)
           filepart = @body.ios.find { |io| io.is_a?(Multipart::MultiIO) }
@@ -122,7 +122,7 @@ module ChefAPI
 
           @content_hash = hash(file).chomp
         else
-          @content_hash = hash(@body || '').chomp
+          @content_hash = hash(@body || "").chomp
         end
       end
 
@@ -152,13 +152,13 @@ module ChefAPI
 
       if @key.nil?
         log.warn "No private key given!"
-        raise 'No private key given!'
+        raise "No private key given!"
       end
 
       if @key.is_a?(OpenSSL::PKey::RSA)
         log.debug "Detected private key is an OpenSSL Ruby object"
         @canonical_key = @key
-      elsif @key =~ /(.+)\.pem$/ || File.exists?(File.expand_path(@key))
+      elsif @key =~ /(.+)\.pem$/ || File.exist?(File.expand_path(@key))
         log.debug "Detected private key is the path to a file"
         contents = File.read(File.expand_path(@key))
         @canonical_key = OpenSSL::PKey::RSA.new(contents)
@@ -170,7 +170,6 @@ module ChefAPI
       @canonical_key
     end
 
-
     #
     # The canonical path, with duplicate and trailing slashes removed. This
     # value is then hashed.
@@ -181,7 +180,7 @@ module ChefAPI
     # @return [String]
     #
     def canonical_path
-      @canonical_path ||= hash(@path.squeeze('/').gsub(/(\/)+$/,'')).chomp
+      @canonical_path ||= hash(@path.squeeze("/").gsub(%r{(/)+$}, "")).chomp
     end
 
     #

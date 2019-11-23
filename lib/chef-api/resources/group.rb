@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::Group < Resource::Base
-    collection_path '/groups'
+    collection_path "/groups"
 
     schema do
       attribute :groupname, type: String, primary: true, required: true
@@ -13,4 +13,3 @@ module ChefAPI
     end
   end
 end
-

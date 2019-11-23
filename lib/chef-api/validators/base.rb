@@ -35,7 +35,7 @@ module ChefAPI
     # @return [Symbol]
     #
     def key
-      name = self.class.name.split('::').last
+      name = self.class.name.split("::").last
       Util.underscore(name).to_sym
     end
 
@@ -47,7 +47,7 @@ module ChefAPI
     #   the parent resource to validate against
     #
     def validate(resource)
-      raise Error::AbstractMethod.new(method: 'Validators::Base#validate')
+      raise Error::AbstractMethod.new(method: "Validators::Base#validate")
     end
 
     #
@@ -76,7 +76,7 @@ module ChefAPI
     # @return [String]
     #
     def classname
-      @classname ||= self.class.name.split('::')[1..-1].join('::')
+      @classname ||= self.class.name.split("::")[1..-1].join("::")
     end
   end
 end

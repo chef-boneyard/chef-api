@@ -1,9 +1,9 @@
-require 'cgi'
-require 'mime/types'
+require "cgi"
+require "mime/types"
 
 module ChefAPI
   module Multipart
-    BOUNDARY = '------ChefAPIMultipartBoundary'.freeze
+    BOUNDARY = "------ChefAPIMultipartBoundary".freeze
 
     class Body
       def initialize(params = {})
@@ -48,12 +48,12 @@ module ChefAPI
       # Read from IOs in order until `length` bytes have been received.
       def read(length = nil, outbuf = nil)
         got_result = false
-        outbuf = outbuf ? outbuf.replace('') : ''
+        outbuf = outbuf ? outbuf.replace("") : ""
 
         while io = current_io
           if result = io.read(length)
             got_result ||= !result.nil?
-            result.force_encoding('BINARY') if result.respond_to?(:force_encoding)
+            result.force_encoding("BINARY") if result.respond_to?(:force_encoding)
             outbuf << result
             length -= result.length if length
             break if length == 0
@@ -65,7 +65,7 @@ module ChefAPI
       end
 
       def rewind
-        @ios.each { |io| io.rewind }
+        @ios.each(&:rewind)
         @index = 0
       end
 
@@ -99,9 +99,9 @@ module ChefAPI
       private
 
       def build(name, value)
-        part =  %|--#{BOUNDARY}\r\n|
-        part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"\r\n\r\n|
-        part << %|#{value}\r\n|
+        part =  %{--#{BOUNDARY}\r\n}
+        part << %{Content-Disposition: form-data; name="#{CGI.escape(name)}"\r\n\r\n}
+        part << %{#{value}\r\n}
         part
       end
     end
@@ -132,14 +132,14 @@ module ChefAPI
 
       def build(name, file)
         filename  = File.basename(file.path)
-        mime_type = MIME::Types.type_for(filename)[0] || MIME::Types['application/octet-stream'][0]
+        mime_type = MIME::Types.type_for(filename)[0] || MIME::Types["application/octet-stream"][0]
 
-        part =  %|--#{BOUNDARY}\r\n|
-        part << %|Content-Disposition: form-data; name="#{CGI.escape(name)}"; filename="#{filename}"\r\n|
-        part << %|Content-Length: #{file.size}\r\n|
-        part << %|Content-Type: #{mime_type.simplified}\r\n|
-        part << %|Content-Transfer-Encoding: binary\r\n|
-        part << %|\r\n|
+        part =  %{--#{BOUNDARY}\r\n}
+        part << %{Content-Disposition: form-data; name="#{CGI.escape(name)}"; filename="#{filename}"\r\n}
+        part << %{Content-Length: #{file.size}\r\n}
+        part << %{Content-Type: #{mime_type.simplified}\r\n}
+        part << %{Content-Transfer-Encoding: binary\r\n}
+        part << %{\r\n}
         part
       end
     end

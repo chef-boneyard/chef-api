@@ -13,7 +13,7 @@ module ChefAPI
       #   the path to the file on disk
       #
       def from_file(path)
-        raise Error::AbstractMethod.new(method: 'Resource::Base#from_file')
+        raise Error::AbstractMethod.new(method: "Resource::Base#from_file")
       end
 
       #
@@ -78,7 +78,7 @@ module ChefAPI
       #   has_many :environments, class_name: 'Environment'
       #
       def has_many(method, options = {})
-        class_name    = options[:class_name] || "Resource::#{Util.camelize(method).sub(/s$/, '')}"
+        class_name    = options[:class_name] || "Resource::#{Util.camelize(method).sub(/s$/, "")}"
         rest_endpoint = options[:rest_endpoint] || method
 
         class_eval <<-EOH, __FILE__, __LINE__ + 1
@@ -227,7 +227,7 @@ module ChefAPI
       #   an array containing the list of resources that were deleted
       #
       def destroy_all(prefix = {})
-        map { |resource| resource.destroy }
+        map(&:destroy)
       end
 
       #
@@ -404,8 +404,8 @@ module ChefAPI
       #   an instance of the resource represented by this JSON
       #
       def from_json(response, prefix = {})
-        response.delete('json_class')
-        response.delete('chef_type')
+        response.delete("json_class")
+        response.delete("chef_type")
 
         new(response, prefix)
       end
@@ -432,7 +432,7 @@ module ChefAPI
       # @return [String]
       #
       def inspect
-        "#{classname}(#{schema.attributes.keys.join(', ')})"
+        "#{classname}(#{schema.attributes.keys.join(", ")})"
       end
 
       #
@@ -444,7 +444,7 @@ module ChefAPI
       # @return [String]
       #
       def classname
-        name.split('::')[1..-1].join('::')
+        name.split("::")[1..-1].join("::")
       end
 
       #
@@ -456,7 +456,7 @@ module ChefAPI
       # @return [String]
       #
       def type
-        Util.underscore(name.split('::').last).gsub('_', ' ')
+        Util.underscore(name.split("::").last).gsub("_", " ")
       end
 
       #
@@ -482,7 +482,7 @@ module ChefAPI
       #   the path to the resource
       #
       def resource_path(id, prefix = {})
-        [expanded_collection_path(prefix), id].join('/')
+        [expanded_collection_path(prefix), id].join("/")
       end
 
       #
@@ -505,7 +505,7 @@ module ChefAPI
       #
       def expanded_collection_path(prefix = {})
         collection_path.gsub(/:\w+/) do |param|
-          key = param.delete(':')
+          key = param.delete(":")
           value = prefix[key] || prefix[key.to_sym]
 
           if value.nil?
@@ -513,7 +513,7 @@ module ChefAPI
           end
 
           URI.escape(value)
-        end.sub(/^\//, '') # Remove leading slash
+        end.sub(%r{^/}, "") # Remove leading slash
       end
 
       #
@@ -522,7 +522,7 @@ module ChefAPI
       # @return [ChefAPI::Connection]
       #
       def connection
-        Thread.current['chefapi.connection'] || ChefAPI.connection
+        Thread.current["chefapi.connection"] || ChefAPI.connection
       end
     end
 
@@ -620,7 +620,7 @@ module ChefAPI
     #   true if the attribute exists, false otherwise
     #
     def attribute?(key)
-      _attributes.has_key?(key.to_sym)
+      _attributes.key?(key.to_sym)
     end
 
     #
@@ -633,12 +633,12 @@ module ChefAPI
     #
     def protected?
       @protected ||= self.class.protected_resources.any? do |thing|
-                       if thing.is_a?(Proc)
-                         thing.call(self)
-                       else
-                         id == thing
-                       end
-                     end
+        if thing.is_a?(Proc)
+          thing.call(self)
+        else
+          id == thing
+        end
+      end
     end
 
     #
@@ -775,7 +775,7 @@ module ChefAPI
     #
     def validate!
       unless valid?
-        sentence = errors.full_messages.join(', ')
+        sentence = errors.full_messages.join(", ")
         raise Error::InvalidResource.new(errors: sentence)
       end
 
@@ -896,7 +896,7 @@ module ChefAPI
     # @return [Boolean]
     #
     def ignore_attribute?(key)
-      @schema.ignored_attributes.has_key?(key.to_sym)
+      @schema.ignored_attributes.key?(key.to_sym)
     end
 
     #
@@ -954,7 +954,7 @@ module ChefAPI
         end
       end
 
-      "#<#{self.class.classname} #{attrs.join(', ')}>"
+      "#<#{self.class.classname} #{attrs.join(", ")}>"
     end
   end
 end

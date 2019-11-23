@@ -1,7 +1,7 @@
 module ChefAPI
   class Resource::Node < Resource::Base
     include ChefAPI::AclAble
-    collection_path '/nodes'
+    collection_path "/nodes"
 
     schema do
       attribute :name,         type: String, primary: true, required: true
@@ -14,7 +14,7 @@ module ChefAPI
       attribute :policy_group, type: String
 
       # Enterprise Chef attributes
-      attribute :chef_environment, type: String, default: '_default'
+      attribute :chef_environment, type: String, default: "_default"
     end
   end
 end

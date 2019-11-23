@@ -1,13 +1,13 @@
-require 'spec_helper'
+require "spec_helper"
 
 module ChefAPI
   describe Resource::Client do
-    it_behaves_like 'a Chef API resource', :client,
+    it_behaves_like "a Chef API resource", :client,
       update: { validator: true }
 
-    describe '.from_file' do
+    describe ".from_file" do
       let(:private_key) do
-        <<-EOH.strip.gsub(/^ {10}/, '')
+        <<-EOH.strip.gsub(/^ {10}/, "")
           -----BEGIN RSA PRIVATE KEY-----
           MIIEogIBAAKCAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzI
           w+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoP
@@ -38,22 +38,22 @@ module ChefAPI
         EOH
       end
 
-      let(:client) { described_class.from_file('/path/to/bacon.pem') }
+      let(:client) { described_class.from_file("/path/to/bacon.pem") }
 
       before do
         allow(File).to receive(:read).and_return(private_key)
       end
 
-      it 'loads the client from the server' do
-        chef_server.create_client('bacon', validator: true)
+      it "loads the client from the server" do
+        chef_server.create_client("bacon", validator: true)
 
-        expect(client.name).to eq('bacon')
+        expect(client.name).to eq("bacon")
         expect(client.private_key).to eq(private_key)
         expect(client.validator).to be_truthy
       end
 
-      it 'creates a new instance when the client does not exist' do
-        expect(client.name).to eq('bacon')
+      it "creates a new instance when the client does not exist" do
+        expect(client.name).to eq("bacon")
         expect(client.validator).to be_falsey
         expect(client.new_resource?).to be_truthy
       end

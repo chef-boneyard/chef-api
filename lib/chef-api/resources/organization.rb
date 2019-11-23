@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::Organization < Resource::Base
-    collection_path '/organizations'
+    collection_path "/organizations"
 
     schema do
       attribute :name,       type: String, primary: true, required: true
@@ -16,7 +16,7 @@ module ChefAPI
       ignore :billing_plan
       ignore :requester_id
       ignore :assigned_at
-      ignore 'couchrest-type'
+      ignore "couchrest-type"
     end
   end
 end

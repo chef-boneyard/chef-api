@@ -1,4 +1,4 @@
-require 'chef_zero/server'
+require "chef_zero/server"
 
 module RSpec
   class ChefServer
@@ -97,7 +97,7 @@ module RSpec
     entity :role,        :roles
     entity :user,        :users
 
-    require 'singleton'
+    require "singleton"
     include Singleton
 
     #
@@ -178,18 +178,17 @@ module RSpec
       #
       # @return [Fixnum]
       #
-      def port
-        return @port if @port
+    def port
+      return @port if @port
 
-        @server = TCPServer.new('127.0.0.1', 0)
-        @port   = @server.addr[1].to_i
-        @server.close
+      @server = TCPServer.new("127.0.0.1", 0)
+      @port   = @server.addr[1].to_i
+      @server.close
 
-        return @port
-      end
+      @port
+    end
   end
 end
-
 
 RSpec.configure do |config|
   config.before(:suite) { RSpec::ChefServer.start }

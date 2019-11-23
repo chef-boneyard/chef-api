@@ -1,10 +1,10 @@
-require 'spec_helper'
+require "spec_helper"
 
 module ChefAPI
   describe Resource::Client do
-    describe '.initialize' do
-      it 'converts an x509 certificate to a public key' do
-        certificate = <<-EOH.gsub(/^ {10}/, '')
+    describe ".initialize" do
+      it "converts an x509 certificate to a public key" do
+        certificate = <<-EOH.gsub(/^ {10}/, "")
           -----BEGIN CERTIFICATE-----
           MIIDOjCCAqOgAwIBAgIEkT9umDANBgkqhkiG9w0BAQUFADCBnjELMAkGA1UEBhMC
           VVMxEzARBgNVBAgMCldhc2hpbmd0b24xEDAOBgNVBAcMB1NlYXR0bGUxFjAUBgNV
@@ -28,7 +28,7 @@ module ChefAPI
         EOH
 
         instance = described_class.new(certificate: certificate)
-        expect(instance.public_key).to eq <<-EOH.gsub(/^ {10}/, '')
+        expect(instance.public_key).to eq <<-EOH.gsub(/^ {10}/, "")
           -----BEGIN PUBLIC KEY-----
           MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApKONs56g868rxGgdQwRy
           xaYy2e2lq0yUCSVL0ITBUxP9Z4rGvtW8PDLzmJxg0qdo+le1ybCYGRbAFu8OU0wR
@@ -42,8 +42,8 @@ module ChefAPI
       end
     end
 
-    describe '#regenerate_keys' do
-      it 'raises an error if the client is not persisted to the server' do
+    describe "#regenerate_keys" do
+      it "raises an error if the client is not persisted to the server" do
         expect {
           described_class.new.regenerate_keys
         }.to raise_error(Error::CannotRegenerateKey)

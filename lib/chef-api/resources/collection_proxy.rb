@@ -59,6 +59,7 @@ module ChefAPI
     #
     def fetch(id)
       return nil unless exists?(id)
+
       cached(id) { klass.from_url(get(id), prefix) }
     end
 
@@ -76,7 +77,7 @@ module ChefAPI
     #   true if the resource exists, false otherwise
     #
     def exists?(id)
-      collection.has_key?(id.to_s)
+      collection.key?(id.to_s)
     end
 
     #
@@ -131,9 +132,9 @@ module ChefAPI
     def inspect
       objects = collection
         .map { |id, _| cached(id) || klass.new(klass.schema.primary_key => id) }
-        .map { |object| object.to_s }
+        .map(&:to_s)
 
-      "#<#{self.class.name} [#{objects.join(', ')}]>"
+      "#<#{self.class.name} [#{objects.join(", ")}]>"
     end
 
     private

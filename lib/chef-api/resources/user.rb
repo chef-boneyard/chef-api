@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::User < Resource::Base
-    collection_path '/users'
+    collection_path "/users"
 
     schema do
       flavor :enterprise do
@@ -38,7 +38,7 @@ module ChefAPI
         # HEC/EC returns a slightly different response than OSC/CZ
         if users.is_a?(Array)
           users.each do |info|
-            name = URI.escape(info['user']['username'])
+            name = URI.escape(info["user"]["username"])
             response = connection.get("/users/#{name}")
             result = from_json(response, prefix)
 
@@ -75,7 +75,7 @@ module ChefAPI
       #   the parsed JSON response from the server
       #
       def authenticate(options = {})
-        connection.post('/authenticate_user', options.to_json)
+        connection.post("/authenticate_user", options.to_json)
       end
     end
   end
