@@ -1,7 +1,15 @@
 # ChefAPI Changelog
+<!-- latest_release 0.10.1 -->
+## [v0.10.1](https://github.com/chef/chef-api/tree/v0.10.1) (2019-11-23)
+
+#### Merged Pull Requests
+- Apply chefstyle to this repo [#79](https://github.com/chef/chef-api/pull/79) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=0.10.0 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Apply chefstyle to this repo [#79](https://github.com/chef/chef-api/pull/79) ([tas50](https://github.com/tas50)) <!-- 0.10.1 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
