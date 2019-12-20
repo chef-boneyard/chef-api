@@ -1,7 +1,7 @@
 require "json"
 require "logify"
 require "pathname"
-require "chef-api/version"
+require_relative "chef-api/version"
 
 module ChefAPI
   autoload :Authentication,  "chef-api/authentication"
