@@ -1,4 +1,4 @@
-require "chef-api/version"
+require_relative "version"
 require "pathname"
 require "json"
 
