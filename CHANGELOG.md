@@ -1,25 +1,22 @@
 # ChefAPI Changelog
-<!-- latest_release 0.10.2 -->
-## [v0.10.2](https://github.com/chef/chef-api/tree/v0.10.2) (2019-12-21)
-
-#### Merged Pull Requests
-- Substitute require for require_relative [#84](https://github.com/chef/chef-api/pull/84) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- release_rollup since=0.10.0 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Substitute require for require_relative [#84](https://github.com/chef/chef-api/pull/84) ([tas50](https://github.com/tas50)) <!-- 0.10.2 -->
-- Apply chefstyle to this repo [#79](https://github.com/chef/chef-api/pull/79) ([tas50](https://github.com/tas50)) <!-- 0.10.1 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [v0.10.2](https://github.com/chef/chef-api/tree/v0.10.2) (2019-12-21)
+
+#### Merged Pull Requests
+- Apply chefstyle to this repo [#79](https://github.com/chef/chef-api/pull/79) ([tas50](https://github.com/tas50))
+- Substitute require for require_relative [#84](https://github.com/chef/chef-api/pull/84) ([tas50](https://github.com/tas50))
+<!-- latest_stable_release -->
+
 ## [v0.10.0](https://github.com/chef/chef-api/tree/v0.10.0) (2019-10-18)
 
 #### Merged Pull Requests
 - Wire up Expeditor to release chef-api and chef-infra-api [#77](https://github.com/chef/chef-api/pull/77) ([tas50](https://github.com/tas50))
 - Require Ruby 2.3+ and remove travis config [#78](https://github.com/chef/chef-api/pull/78) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## v0.9.0 (2018-12-03)
 
