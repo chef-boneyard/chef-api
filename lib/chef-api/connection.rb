@@ -34,7 +34,6 @@ module ChefAPI
       end
     end
 
-    include Logify
     include ChefAPI::Configurable
 
     proxy :clients,        "Resource::Client"
@@ -198,8 +197,8 @@ module ChefAPI
     #   the response body
     #
     def request(verb, path, data = {}, params = {}, request_options = {})
-      log.info  "#{verb.to_s.upcase} #{path}..."
-      log.debug "Chef flavor: #{flavor.inspect}"
+      ChefAPI::Log.info  "#{verb.to_s.upcase} #{path}..."
+      ChefAPI::Log.debug "Chef flavor: #{flavor.inspect}"
 
       # Build the URI and request object from the given information
       if %i{delete get}.include?(verb)
@@ -215,36 +214,36 @@ module ChefAPI
       # Setup PATCH/POST/PUT
       if %i{patch post put}.include?(verb)
         if data.respond_to?(:read)
-          log.info "Detected file/io presence"
+          ChefAPI::Log.info "Detected file/io presence"
           request.body_stream = data
         elsif data.is_a?(Hash)
           # If any of the values in the hash are File-like, assume this is a
           # multi-part post
           if data.values.any? { |value| value.respond_to?(:read) }
-            log.info "Detected multipart body"
+            ChefAPI::Log.info "Detected multipart body"
 
             multipart = Multipart::Body.new(data)
 
-            log.debug "Content-Type: #{multipart.content_type}"
-            log.debug "Content-Length: #{multipart.content_length}"
+            ChefAPI::Log.debug "Content-Type: #{multipart.content_type}"
+            ChefAPI::Log.debug "Content-Length: #{multipart.content_length}"
 
             request.content_length = multipart.content_length
             request.content_type   = multipart.content_type
 
             request.body_stream    = multipart.stream
           else
-            log.info "Detected form data"
+            ChefAPI::Log.info "Detected form data"
             request.form_data = data
           end
         else
-          log.info "Detected regular body"
+          ChefAPI::Log.info "Detected regular body"
           request.body = data
         end
       end
 
       # Sign the request
       if request_options[:sign] == false
-        log.info "Skipping signed header authentication (user requested)..."
+        ChefAPI::Log.info "Skipping signed header authentication (user requested)..."
       else
         add_signing_headers(verb, uri.path, request)
       end
@@ -276,8 +275,8 @@ module ChefAPI
         # Naughty, naughty, naughty! Don't blame when when someone hops in
         # and executes a MITM attack!
         unless ssl_verify
-          log.warn "Disabling SSL verification..."
-          log.warn "Neither ChefAPI nor the maintainers are responsible for " \
+          ChefAPI::Log.warn "Disabling SSL verification..."
+          ChefAPI::Log.warn "Neither ChefAPI nor the maintainers are responsible for " \
             "damages incurred as a result of disabling SSL verification. " \
             "Please use this with extreme caution, or consider specifying " \
             "a custom certificate using `config.ssl_pem_file'."
@@ -290,13 +289,13 @@ module ChefAPI
       connection.start do |http|
         response = http.request(request)
 
-        log.debug "Raw response:"
-        log.debug response.body
+        ChefAPI::Log.debug "Raw response:"
+        ChefAPI::Log.debug response.body
 
         case response
         when Net::HTTPRedirection
           redirect = URI.parse(response["location"]).to_s
-          log.debug "Performing HTTP redirect to #{redirect}"
+          ChefAPI::Log.debug "Performing HTTP redirect to #{redirect}"
           request(verb, redirect, data)
         when Net::HTTPSuccess
           success(response)
@@ -305,7 +304,7 @@ module ChefAPI
         end
       end
     rescue SocketError, Errno::ECONNREFUSED, EOFError
-      log.warn "Unable to reach the Chef Server"
+      ChefAPI::Log.warn "Unable to reach the Chef Server"
       raise Error::HTTPServerUnavailable.new
     end
 
@@ -328,13 +327,13 @@ module ChefAPI
     # @return [URI]
     #
     def build_uri(verb, path, params = {})
-      log.info "Building URI..."
+      ChefAPI::Log.info "Building URI..."
 
       # Add any query string parameters
       if querystring = to_query_string(params)
-        log.debug "Detected verb deserves a querystring"
-        log.debug "Building querystring using #{params.inspect}"
-        log.debug "Compiled querystring is #{querystring.inspect}"
+        ChefAPI::Log.debug "Detected verb deserves a querystring"
+        ChefAPI::Log.debug "Building querystring using #{params.inspect}"
+        ChefAPI::Log.debug "Compiled querystring is #{querystring.inspect}"
         path = [path, querystring].compact.join("?")
       end
 
@@ -343,8 +342,8 @@ module ChefAPI
 
       # Don't merge absolute URLs
       unless uri.absolute?
-        log.debug "Detected URI is relative"
-        log.debug "Appending #{path} to #{endpoint}"
+        ChefAPI::Log.debug "Detected URI is relative"
+        ChefAPI::Log.debug "Appending #{path} to #{endpoint}"
         uri = URI.parse(File.join(endpoint, path))
       end
 
@@ -395,15 +394,15 @@ module ChefAPI
     #   the parsed response, as an object
     #
     def success(response)
-      log.info "Parsing response as success..."
+      ChefAPI::Log.info "Parsing response as success..."
 
       case response["Content-Type"]
       when /json/
-        log.debug "Detected response as JSON"
-        log.debug "Parsing response body as JSON"
+        ChefAPI::Log.debug "Detected response as JSON"
+        ChefAPI::Log.debug "Parsing response body as JSON"
         JSON.parse(response.body)
       else
-        log.debug "Detected response as text/plain"
+        ChefAPI::Log.debug "Detected response as text/plain"
         response.body
       end
     end
@@ -416,15 +415,15 @@ module ChefAPI
     #   the response object from the request
     #
     def error(response)
-      log.info "Parsing response as error..."
+      ChefAPI::Log.info "Parsing response as error..."
 
       case response["Content-Type"]
       when /json/
-        log.debug "Detected error response as JSON"
-        log.debug "Parsing error response as JSON"
+        ChefAPI::Log.debug "Detected error response as JSON"
+        ChefAPI::Log.debug "Parsing error response as JSON"
         message = JSON.parse(response.body)
       else
-        log.debug "Detected response as text/plain"
+        ChefAPI::Log.debug "Detected response as text/plain"
         message = response.body
       end
 
@@ -456,7 +455,7 @@ module ChefAPI
     # @param [Net::HTTP::Request] request
     #
     def add_request_headers(request)
-      log.info "Adding request headers..."
+      ChefAPI::Log.info "Adding request headers..."
 
       headers = {
         "Accept" => "application/json",
@@ -468,7 +467,7 @@ module ChefAPI
       }
 
       headers.each do |key, value|
-        log.debug "#{key}: #{value}"
+        ChefAPI::Log.debug "#{key}: #{value}"
         request[key] = value
       end
     end
@@ -484,7 +483,7 @@ module ChefAPI
     # @param [Net::HTTP::Request] request
     #
     def add_signing_headers(verb, path, request)
-      log.info "Adding signed header authentication..."
+      ChefAPI::Log.info "Adding signed header authentication..."
 
       authentication = Authentication.from_options(
         user: client,
@@ -495,7 +494,7 @@ module ChefAPI
       )
 
       authentication.headers.each do |key, value|
-        log.debug "#{key}: #{value}"
+        ChefAPI::Log.debug "#{key}: #{value}"
         request[key] = value
       end
 

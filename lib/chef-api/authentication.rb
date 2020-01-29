@@ -11,7 +11,6 @@ require "time"
 
 module ChefAPI
   class Authentication
-    include Logify
 
     # @todo: Enable this in the future when Mixlib::Authentication supports
     # signing the full request body instead of just the uploaded file parameter.
@@ -148,22 +147,22 @@ module ChefAPI
     def canonical_key
       return @canonical_key if @canonical_key
 
-      log.info "Parsing private key..."
+      ChefAPI::Log.info "Parsing private key..."
 
       if @key.nil?
-        log.warn "No private key given!"
+        ChefAPI::Log.warn "No private key given!"
         raise "No private key given!"
       end
 
       if @key.is_a?(OpenSSL::PKey::RSA)
-        log.debug "Detected private key is an OpenSSL Ruby object"
+        ChefAPI::Log.debug "Detected private key is an OpenSSL Ruby object"
         @canonical_key = @key
       elsif @key =~ /(.+)\.pem$/ || File.exist?(File.expand_path(@key))
-        log.debug "Detected private key is the path to a file"
+        ChefAPI::Log.debug "Detected private key is the path to a file"
         contents = File.read(File.expand_path(@key))
         @canonical_key = OpenSSL::PKey::RSA.new(contents)
       else
-        log.debug "Detected private key was the literal string key"
+        ChefAPI::Log.debug "Detected private key was the literal string key"
         @canonical_key = OpenSSL::PKey::RSA.new(@key)
       end
 

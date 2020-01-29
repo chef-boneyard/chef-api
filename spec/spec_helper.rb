@@ -14,7 +14,7 @@ RSpec.configure do |config|
 
   #
   config.before(:each) do
-    Logify.level = :fatal
+    ChefAPI::Log.level = :fatal
   end
 
   # Run specs in random order to surface order dependencies. If you find an
