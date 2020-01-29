@@ -19,6 +19,6 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "mixlib-log", "~> 3.0"
+  spec.add_dependency "mixlib-log", ">= 1", "< 4" # we need to validate 4.x before we loosen this
   spec.add_dependency "mime-types"
 end
