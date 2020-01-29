@@ -1,6 +1,6 @@
 require "json"
-require "logify"
 require "pathname"
+require_relative "chef-api/log"
 require_relative "chef-api/version"
 
 module ChefAPI
@@ -35,7 +35,7 @@ module ChefAPI
     #   the log level to set
     #
     def log_level=(level)
-      Logify.level = level
+      ChefAPI::Log.level = level
     end
 
     #
@@ -44,7 +44,7 @@ module ChefAPI
     # @return [Symbol]
     #
     def log_level
-      Logify.level
+      ChefAPI::Log.level
     end
 
     #
