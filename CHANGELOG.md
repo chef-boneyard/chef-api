@@ -1,7 +1,15 @@
 # ChefAPI Changelog
+<!-- latest_release 0.10.3 -->
+## [v0.10.3](https://github.com/chef/chef-api/tree/v0.10.3) (2020-01-29)
+
+#### Merged Pull Requests
+- Switch logging to mixlib-log instead of logify [#85](https://github.com/chef/chef-api/pull/85) ([tecracer-theinen](https://github.com/tecracer-theinen))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=0.10.2 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Switch logging to mixlib-log instead of logify [#85](https://github.com/chef/chef-api/pull/85) ([tecracer-theinen](https://github.com/tecracer-theinen)) <!-- 0.10.3 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
