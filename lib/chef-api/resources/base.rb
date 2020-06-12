@@ -1,6 +1,8 @@
 module ChefAPI
   class Resource::Base
     class << self
+      require "cgi"
+
       # Including the Enumberable module gives us magic
       include Enumerable
 
@@ -512,7 +514,7 @@ module ChefAPI
             raise Error::MissingURLParameter.new(param: key)
           end
 
-          URI.escape(value)
+          CGI.escape(value)
         end.sub(%r{^/}, "") # Remove leading slash
       end
 

@@ -1,5 +1,7 @@
 module ChefAPI
   class Resource::User < Resource::Base
+    require "cgi"
+
     collection_path "/users"
 
     schema do
@@ -38,7 +40,7 @@ module ChefAPI
         # HEC/EC returns a slightly different response than OSC/CZ
         if users.is_a?(Array)
           users.each do |info|
-            name = URI.escape(info["user"]["username"])
+            name = CGI.escape(info["user"]["username"])
             response = connection.get("/users/#{name}")
             result = from_json(response, prefix)
 

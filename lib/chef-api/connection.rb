@@ -2,6 +2,7 @@ require "net/http"
 require "net/https"
 require "openssl"
 require "uri"
+require "cgi"
 
 module ChefAPI
   #
@@ -376,7 +377,7 @@ module ChefAPI
     #
     def to_query_string(hash)
       hash.map do |key, value|
-        "#{URI.escape(key.to_s)}=#{URI.escape(value.to_s)}"
+        "#{CGI.escape(key.to_s)}=#{CGI.escape(value.to_s)}"
       end.join("&")[/.+/]
     end
 
