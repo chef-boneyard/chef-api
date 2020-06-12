@@ -173,11 +173,11 @@ module RSpec
 
     private
 
-      #
-      # A randomly assigned, open port for run the Chef Zero server.
-      #
-      # @return [Fixnum]
-      #
+    #
+    # A randomly assigned, open port for run the Chef Zero server.
+    #
+    # @return [Fixnum]
+    #
     def port
       return @port if @port
 
