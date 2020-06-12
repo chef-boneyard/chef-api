@@ -1,7 +1,15 @@
 # ChefAPI Changelog
+<!-- latest_release 0.10.6 -->
+## [v0.10.6](https://github.com/chef/chef-api/tree/v0.10.6) (2020-06-12)
+
+#### Merged Pull Requests
+- Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=0.10.5 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024)) <!-- 0.10.6 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
