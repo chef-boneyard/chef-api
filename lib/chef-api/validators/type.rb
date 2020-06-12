@@ -15,7 +15,7 @@ module ChefAPI
       value = resource._attributes[attribute]
 
       if value && !types.any? { |type| value.is_a?(type) }
-        short_name = type.to_s.split("::").last
+        short_name = types.to_s.split("::").last
         resource.errors.add(attribute, "must be a kind of #{short_name}")
       end
     end
