@@ -1,14 +1,15 @@
 # ChefAPI Changelog
-<!-- latest_release 0.10.6 -->
-## [v0.10.6](https://github.com/chef/chef-api/tree/v0.10.6) (2020-06-12)
+<!-- latest_release 0.10.7 -->
+## [v0.10.7](https://github.com/chef/chef-api/tree/v0.10.7) (2020-06-12)
 
 #### Merged Pull Requests
-- Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024))
+- Pin pry-stack-explorer and fix indentation [#90](https://github.com/chef/chef-api/pull/90) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
 <!-- release_rollup since=0.10.5 -->
 ### Changes not yet released to rubygems.org
 
 #### Merged Pull Requests
+- Pin pry-stack-explorer and fix indentation [#90](https://github.com/chef/chef-api/pull/90) ([tas50](https://github.com/tas50)) <!-- 0.10.7 -->
 - Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024)) <!-- 0.10.6 -->
 <!-- release_rollup -->
 
