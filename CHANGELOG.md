@@ -1,26 +1,23 @@
 # ChefAPI Changelog
-<!-- latest_release 0.10.7 -->
-## [v0.10.7](https://github.com/chef/chef-api/tree/v0.10.7) (2020-06-12)
-
-#### Merged Pull Requests
-- Pin pry-stack-explorer and fix indentation [#90](https://github.com/chef/chef-api/pull/90) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- release_rollup since=0.10.5 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Pin pry-stack-explorer and fix indentation [#90](https://github.com/chef/chef-api/pull/90) ([tas50](https://github.com/tas50)) <!-- 0.10.7 -->
-- Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024)) <!-- 0.10.6 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [v0.10.7](https://github.com/chef/chef-api/tree/v0.10.7) (2020-06-12)
+
+#### Merged Pull Requests
+- Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024))
+- Pin pry-stack-explorer and fix indentation [#90](https://github.com/chef/chef-api/pull/90) ([tas50](https://github.com/tas50))
+<!-- latest_stable_release -->
+
 ## [v0.10.5](https://github.com/chef/chef-api/tree/v0.10.5) (2020-01-29)
 
 #### Merged Pull Requests
 - Switch logging to mixlib-log instead of logify [#85](https://github.com/chef/chef-api/pull/85) ([tecracer-theinen](https://github.com/tecracer-theinen))
 - Loosen the mixlib-log dep to allow for older ruby releases [#86](https://github.com/chef/chef-api/pull/86) ([tas50](https://github.com/tas50))
 - Test on Ruby 2.7 and test on Windows [#87](https://github.com/chef/chef-api/pull/87) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## [v0.10.2](https://github.com/chef/chef-api/tree/v0.10.2) (2019-12-21)
 
