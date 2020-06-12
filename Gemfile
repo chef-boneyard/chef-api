@@ -18,6 +18,6 @@ end
 group :debug do
   gem "pry"
   gem "pry-byebug"
-  gem "pry-stack_explorer"
+  gem "pry-stack_explorer", "~> 0.4.0" # supports Ruby < 2.6
   gem "rb-readline"
 end
