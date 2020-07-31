@@ -1,7 +1,15 @@
 # ChefAPI Changelog
+<!-- latest_release 0.10.8 -->
+## [v0.10.8](https://github.com/chef/chef-api/tree/v0.10.8) (2020-07-31)
+
+#### Merged Pull Requests
+- Avoid Ruby 2.7 deprecation warnings by switching to CGI [#91](https://github.com/chef/chef-api/pull/91) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- latest_release -->
-<!-- release_rollup -->
+<!-- release_rollup since=0.10.7 -->
+### Changes not yet released to rubygems.org
+
+#### Merged Pull Requests
+- Avoid Ruby 2.7 deprecation warnings by switching to CGI [#91](https://github.com/chef/chef-api/pull/91) ([tas50](https://github.com/tas50)) <!-- 0.10.8 -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
