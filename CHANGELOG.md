@@ -1,26 +1,23 @@
 # ChefAPI Changelog
-<!-- latest_release 0.10.10 -->
-## [v0.10.10](https://github.com/chef/chef-api/tree/v0.10.10) (2020-08-20)
-
-#### Merged Pull Requests
-- Optimize our requires [#93](https://github.com/chef/chef-api/pull/93) ([tas50](https://github.com/tas50))
 <!-- latest_release -->
-<!-- release_rollup since=0.10.7 -->
-### Changes not yet released to rubygems.org
-
-#### Merged Pull Requests
-- Optimize our requires [#93](https://github.com/chef/chef-api/pull/93) ([tas50](https://github.com/tas50)) <!-- 0.10.10 -->
-- Fix chefstyle violations. [#94](https://github.com/chef/chef-api/pull/94) ([phiggins](https://github.com/phiggins)) <!-- 0.10.9 -->
-- Avoid Ruby 2.7 deprecation warnings by switching to CGI [#91](https://github.com/chef/chef-api/pull/91) ([tas50](https://github.com/tas50)) <!-- 0.10.8 -->
+<!-- latest_release -->
+<!-- release_rollup -->
 <!-- release_rollup -->
 
 <!-- latest_stable_release -->
+## [v0.10.10](https://github.com/chef/chef-api/tree/v0.10.10) (2020-08-20)
+
+#### Merged Pull Requests
+- Avoid Ruby 2.7 deprecation warnings by switching to CGI [#91](https://github.com/chef/chef-api/pull/91) ([tas50](https://github.com/tas50))
+- Fix chefstyle violations. [#94](https://github.com/chef/chef-api/pull/94) ([phiggins](https://github.com/phiggins))
+- Optimize our requires [#93](https://github.com/chef/chef-api/pull/93) ([tas50](https://github.com/tas50))
+<!-- latest_stable_release -->
+
 ## [v0.10.7](https://github.com/chef/chef-api/tree/v0.10.7) (2020-06-12)
 
 #### Merged Pull Requests
 - Fix an undefined variable error in Validator::Type [#89](https://github.com/chef/chef-api/pull/89) ([yuta1024](https://github.com/yuta1024))
 - Pin pry-stack-explorer and fix indentation [#90](https://github.com/chef/chef-api/pull/90) ([tas50](https://github.com/tas50))
-<!-- latest_stable_release -->
 
 ## [v0.10.5](https://github.com/chef/chef-api/tree/v0.10.5) (2020-01-29)
 
