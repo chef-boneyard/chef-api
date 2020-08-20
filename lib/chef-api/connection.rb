@@ -1,8 +1,7 @@
-require "net/http"
-require "net/https"
-require "openssl"
-require "uri"
-require "cgi"
+require "net/http" unless defined?(Net::HTTP)
+require "openssl" unless defined?(OpenSSL)
+require "uri" unless defined?(URI)
+require "cgi" unless defined?(CGI)
 
 module ChefAPI
   #

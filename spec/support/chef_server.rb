@@ -97,7 +97,7 @@ module RSpec
     entity :role,        :roles
     entity :user,        :users
 
-    require "singleton"
+    require "singleton" unless defined?(Singleton)
     include Singleton
 
     #

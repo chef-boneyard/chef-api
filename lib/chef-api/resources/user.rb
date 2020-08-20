@@ -1,6 +1,6 @@
 module ChefAPI
   class Resource::User < Resource::Base
-    require "cgi"
+    require "cgi" unless defined?(CGI)
 
     collection_path "/users"
 

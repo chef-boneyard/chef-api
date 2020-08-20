@@ -1,5 +1,5 @@
-require "cgi"
-require "mime/types"
+require "cgi" unless defined?(CGI)
+require "mime/types" unless defined?(MIME::Types)
 
 module ChefAPI
   module Multipart

@@ -1,7 +1,7 @@
 module ChefAPI
   class Resource::Base
     class << self
-      require "cgi"
+      require "cgi" unless defined?(CGI)
 
       # Including the Enumberable module gives us magic
       include Enumerable

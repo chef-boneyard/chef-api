@@ -1,7 +1,7 @@
-require "base64"
-require "digest"
-require "openssl"
-require "time"
+require "base64" unless defined?(Base64)
+require "digest" unless defined?(Digest)
+require "openssl" unless defined?(OpenSSL)
+require "time" unless defined?(Time)
 
 #
 # DEBUG steps:

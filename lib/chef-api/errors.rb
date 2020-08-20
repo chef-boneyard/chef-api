@@ -1,4 +1,4 @@
-require "erb"
+require "erb" unless defined?(Erb)
 
 module ChefAPI
   module Error
