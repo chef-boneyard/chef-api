@@ -1,5 +1,5 @@
-require "json"
-require "pathname"
+require "json" unless defined?(JSON)
+require "pathname" unless defined?(Pathname)
 require_relative "chef-api/log"
 require_relative "chef-api/version"
 

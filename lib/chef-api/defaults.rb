@@ -1,6 +1,6 @@
 require_relative "version"
-require "pathname"
-require "json"
+require "pathname" unless defined?(Pathname)
+require "json" unless defined?(JSON)
 
 module ChefAPI
   module Defaults
