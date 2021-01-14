@@ -7,7 +7,7 @@ ChefAPI is a dependency-minimal Ruby client for interacting with a Chef Server. 
 
 ## DEPRECATED
 
-The chef-api gem is no longer maintained.
+The chef-api gem is no longer maintained. Please use the supported `Chef::ServerAPI` library from the [Chef](https://github.com/chef/chef) gem. Documentation is provided at https://docs.chef.io/server/api_chef_server/.
 
 ## Quick start
 
